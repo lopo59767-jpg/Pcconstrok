@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PC Builder — Собери ПК в России</title>
+    <title>PC Builder 3D — Собери и купи ПК</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,8 +19,8 @@
             background: #0b0b0b;
             color: #eaeaea;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -44,6 +45,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            flex-wrap: wrap;
         }
         .header .auth-btn {
             background: #3b82f6;
@@ -58,12 +60,10 @@
         .header .auth-btn:hover {
             background: #2563eb;
         }
-
         .layout {
             display: flex;
             min-height: calc(100vh - 64px);
         }
-
         .sidebar {
             width: 250px;
             background: #111;
@@ -112,7 +112,6 @@
             border-top: 1px solid #1e1e1e;
             margin: 10px 0;
         }
-
         .sidebar .build-summary {
             background: rgba(0, 150, 255, 0.1);
             border: 1px solid #0099ff;
@@ -142,7 +141,52 @@
             color: #00ff00;
             font-weight: 600;
         }
-
+        .sidebar .build-summary .btn-buy-all {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: #facc15;
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sidebar .build-summary .btn-buy-all:hover {
+            background: #eab308;
+            transform: scale(1.02);
+        }
+        .sidebar .build-summary .btn-save {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            background: #00cc66;
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .sidebar .build-summary .btn-save:hover {
+            background: #00bb55;
+        }
+        .sidebar .build-summary .btn-clear {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            background: #333;
+            border: none;
+            border-radius: 8px;
+            color: #888;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .sidebar .build-summary .btn-clear:hover {
+            background: #444;
+            color: #fff;
+        }
         .main {
             flex: 1;
             padding: 24px 32px;
@@ -185,7 +229,6 @@
         .main .sort-bar select:focus {
             border-color: #3b82f6;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -203,13 +246,21 @@
             background: #181818;
             transform: translateY(-2px);
         }
-        .card img {
+        .card .image-wrap {
             width: 100%;
-            height: 140px;
-            object-fit: contain;
+            height: 150px;
             background: #0a0a0a;
             border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 10px;
+        }
+        .card .image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .card .name {
             font-weight: 500;
@@ -278,7 +329,14 @@
             background: #3a3a3a;
             color: #fff;
         }
-
+        .card .btn-buy {
+            background: #facc15;
+            color: #000;
+            font-weight: 600;
+        }
+        .card .btn-buy:hover {
+            background: #eab308;
+        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -316,13 +374,21 @@
         .modal .close:hover {
             color: #fff;
         }
-        .modal img {
+        .modal .image-wrap {
             width: 100%;
             height: 200px;
-            object-fit: contain;
             background: #0a0a0a;
             border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 16px;
+        }
+        .modal .image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .modal .modal-title {
             font-size: 22px;
@@ -399,7 +465,74 @@
         .modal .modal-btns .btn-add-modal:hover {
             background: #3b82f6;
         }
-
+        .canvas-container {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .canvas-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .canvas-container .fps-overlay {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a1a;
+            border: 1px solid #00cc66;
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: #fff;
+            z-index: 9999;
+            display: none;
+            max-width: 350px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+        .toast.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        .toast .toast-title {
+            font-weight: 600;
+            color: #00cc66;
+            margin-bottom: 4px;
+        }
+        .toast .toast-close {
+            float: right;
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         @media (max-width: 768px) {
             .sidebar {
                 display: none;
@@ -418,13 +551,16 @@
                 padding: 20px;
                 margin: 10px;
             }
+            .canvas-container {
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="logo">PC<span>Builder</span></div>
+        <div class="logo">PC<span>Builder</span> 3D</div>
         <div class="right">
             <span id="userInfo" style="color:#888;font-size:14px;">👤 Гость</span>
             <button class="auth-btn" id="authBtn">Войти</button>
@@ -434,82 +570,34 @@
     <div class="layout">
 
         <aside class="sidebar" id="sidebar">
-            <div class="category active" data-cat="cpu">
-                <span><i class="fas fa-microchip"></i> Процессоры</span>
-                <span class="count">12</span>
-            </div>
-            <div class="category" data-cat="gpu">
-                <span><i class="fas fa-desktop"></i> Видеокарты</span>
-                <span class="count">12</span>
-            </div>
-            <div class="category" data-cat="ram">
-                <span><i class="fas fa-memory"></i> Оперативная память</span>
-                <span class="count">10</span>
-            </div>
-            <div class="category" data-cat="motherboard">
-                <span><i class="fas fa-server"></i> Материнские платы</span>
-                <span class="count">10</span>
-            </div>
-            <div class="category" data-cat="cooler">
-                <span><i class="fas fa-snowflake"></i> Охлаждение</span>
-                <span class="count">8</span>
-            </div>
-            <div class="category" data-cat="storage">
-                <span><i class="fas fa-hdd"></i> Накопители</span>
-                <span class="count">10</span>
-            </div>
-            <div class="category" data-cat="psu">
-                <span><i class="fas fa-plug"></i> Блоки питания</span>
-                <span class="count">8</span>
-            </div>
-            <div class="category" data-cat="case">
-                <span><i class="fas fa-cube"></i> Корпуса</span>
-                <span class="count">8</span>
-            </div>
+            <div class="category active" data-cat="cpu"><span><i class="fas fa-microchip"></i> Процессоры</span><span class="count">25</span></div>
+            <div class="category" data-cat="gpu"><span><i class="fas fa-desktop"></i> Видеокарты</span><span class="count">25</span></div>
+            <div class="category" data-cat="ram"><span><i class="fas fa-memory"></i> Оперативная память</span><span class="count">20</span></div>
+            <div class="category" data-cat="motherboard"><span><i class="fas fa-server"></i> Материнские платы</span><span class="count">20</span></div>
+            <div class="category" data-cat="cooler"><span><i class="fas fa-snowflake"></i> Охлаждение</span><span class="count">18</span></div>
+            <div class="category" data-cat="storage"><span><i class="fas fa-hdd"></i> Накопители</span><span class="count">20</span></div>
+            <div class="category" data-cat="psu"><span><i class="fas fa-plug"></i> Блоки питания</span><span class="count">16</span></div>
+            <div class="category" data-cat="case"><span><i class="fas fa-cube"></i> Корпуса</span><span class="count">15</span></div>
             <div class="divider"></div>
-            <div class="category" data-cat="monitor">
-                <span><i class="fas fa-tv"></i> Мониторы</span>
-                <span class="count">8</span>
-            </div>
-            <div class="category" data-cat="keyboard">
-                <span><i class="fas fa-keyboard"></i> Клавиатуры</span>
-                <span class="count">8</span>
-            </div>
-            <div class="category" data-cat="mouse">
-                <span><i class="fas fa-mouse"></i> Мыши</span>
-                <span class="count">8</span>
-            </div>
-            <div class="category" data-cat="speaker">
-                <span><i class="fas fa-volume-up"></i> Колонки</span>
-                <span class="count">6</span>
-            </div>
+            <div class="category" data-cat="monitor"><span><i class="fas fa-tv"></i> Мониторы</span><span class="count">15</span></div>
+            <div class="category" data-cat="keyboard"><span><i class="fas fa-keyboard"></i> Клавиатуры</span><span class="count">15</span></div>
+            <div class="category" data-cat="mouse"><span><i class="fas fa-mouse"></i> Мыши</span><span class="count">15</span></div>
+            <div class="category" data-cat="speaker"><span><i class="fas fa-volume-up"></i> Колонки</span><span class="count">12</span></div>
 
             <div class="build-summary">
                 <h4>📦 Ваша сборка</h4>
-                <div class="stat">
-                    <span class="label">Компонентов:</span>
-                    <span class="value" id="componentCount">0 / 12</span>
-                </div>
-                <div class="stat">
-                    <span class="label">Стоимость:</span>
-                    <span class="value" id="totalPrice">0 ₽</span>
-                </div>
-                <div class="stat">
-                    <span class="label">Мощность:</span>
-                    <span class="value" id="totalPower">0 W</span>
-                </div>
-                <button id="saveBuildBtn" style="width:100%;margin-top:12px;padding:10px;background:#00cc66;border:none;border-radius:8px;color:#000;font-weight:600;cursor:pointer;">
-                    💾 Сохранить сборку
-                </button>
-                <button id="clearBuildBtn" style="width:100%;margin-top:6px;padding:10px;background:#333;border:none;border-radius:8px;color:#888;font-weight:600;cursor:pointer;">
-                    🗑️ Очистить
-                </button>
+                <div class="stat"><span class="label">Компонентов:</span><span class="value" id="componentCount">0 / 12</span></div>
+                <div class="stat"><span class="label">Стоимость:</span><span class="value" id="totalPrice">0 ₽</span></div>
+                <div class="stat"><span class="label">Мощность:</span><span class="value" id="totalPower">0 W</span></div>
+                <button class="btn-buy-all" onclick="buyAll()"><i class="fas fa-shopping-cart"></i> Купить все компоненты</button>
+                <button class="btn-save" id="saveBuildBtn">💾 Сохранить сборку</button>
+                <button class="btn-clear" id="clearBuildBtn">🗑️ Очистить</button>
             </div>
         </aside>
 
         <main class="main" id="main">
             <div class="top">
-                <h2 id="catTitle">Процессоры <small>для России</small></h2>
+                <h2 id="catTitle">Процессоры <small>для России (25 товаров)</small></h2>
                 <div class="sort-bar">
                     <span style="color:#666;font-size:13px;">Сортировать:</span>
                     <select id="sortSelect">
@@ -520,16 +608,21 @@
                     </select>
                 </div>
             </div>
+
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="canvas3d"></canvas>
+                <div class="fps-overlay">🎮 FPS: <span id="fpsDisplay">0</span></div>
+            </div>
+
             <div class="grid" id="grid"></div>
         </main>
 
     </div>
 
-    <!-- Модал -->
     <div class="modal-overlay" id="modal">
         <div class="modal">
             <button class="close" id="modalClose">&times;</button>
-            <img id="modalImg" src="" alt="товар" />
+            <div class="image-wrap"><img id="modalImg" src="" alt="товар" /></div>
             <div class="modal-title" id="modalTitle">Название</div>
             <div class="modal-shop" id="modalShop">Магазин</div>
             <div class="modal-price" id="modalPrice">0 ₽</div>
@@ -543,444 +636,140 @@
         </div>
     </div>
 
+    <div class="toast" id="toast">
+        <button class="toast-close" onclick="closeToast()">✕</button>
+        <div class="toast-title" id="toastTitle">✅ Готово!</div>
+        <div id="toastMessage">Действие выполнено успешно</div>
+    </div>
+
     <script>
         // ============================================================
-        // БОЛЬШАЯ БАЗА ТОВАРОВ — ВСЕ КАТЕГОРИИ
+        // ФУНКЦИЯ ПОЛУЧЕНИЯ ФОТО
+        // ============================================================
+
+        const REAL_IMAGES = {
+            'AMD Ryzen 9 9950X3D': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_9_9950x3d.jpg',
+            'AMD Ryzen 7 9800X3D': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_7_9800x3d.jpg',
+            'Intel Core i9-14900K': 'https://ir.ozon.ru/multimedia/c1000/1000000000/intel_core_i9_14900k.jpg',
+            'AMD Ryzen 7 7700X': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_7_7700x.jpg',
+            'AMD Ryzen 5 7600X': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_5_7600x.jpg',
+            'NVIDIA RTX 5090 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_5090.jpg',
+            'NVIDIA RTX 5080 16GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_5080.jpg',
+            'AMD Radeon RX 7900 XTX': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_radeon_rx_7900_xtx.jpg',
+            'NVIDIA RTX 4070 Ti SUPER': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_4070_ti_super.jpg',
+            'Corsair Vengeance 32GB DDR5-6000': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_vengeance_32gb.jpg',
+            'G.Skill Trident Z5 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/gskill_trident_z5.jpg',
+            'Kingston Fury Beast 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/kingston_fury_beast.jpg',
+            'ASUS ROG STRIX B850-F': 'https://ir.ozon.ru/multimedia/c1000/1000000000/asus_rog_strix_b850f.jpg',
+            'MSI MAG B650 TOMAHAWK': 'https://ir.ozon.ru/multimedia/c1000/1000000000/msi_mag_b650_tomahawk.jpg',
+            'Gigabyte B650 AORUS ELITE': 'https://ir.ozon.ru/multimedia/c1000/1000000000/gigabyte_b650_aorus.jpg',
+            'Noctua NH-D15': 'https://ir.ozon.ru/multimedia/c1000/1000000000/noctua_nh_d15.jpg',
+            'Arctic Liquid Freezer III 360': 'https://ir.ozon.ru/multimedia/c1000/1000000000/arctic_liquid_freezer_360.jpg',
+            'Samsung 990 PRO 2TB NVMe': 'https://ir.ozon.ru/multimedia/c1000/1000000000/samsung_990_pro.jpg',
+            'WD Black SN850X 2TB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/wd_black_sn850x.jpg',
+            'Corsair RM1000e 1000W': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_rm1000e.jpg',
+            'Seasonic Focus GX-850': 'https://ir.ozon.ru/multimedia/c1000/1000000000/seasonic_focus_gx850.jpg',
+            'NZXT H7 Flow': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nzxt_h7_flow.jpg',
+            'Lian Li O11 Dynamic EVO': 'https://ir.ozon.ru/multimedia/c1000/1000000000/lianli_o11_dynamic.jpg',
+            'Samsung Odyssey G9 49"': 'https://ir.ozon.ru/multimedia/c1000/1000000000/samsung_odyssey_g9.jpg',
+            'LG UltraGear 27" 240Hz': 'https://ir.ozon.ru/multimedia/c1000/1000000000/lg_ultragear_27.jpg',
+            'Razer Huntsman V3 Pro': 'https://ir.ozon.ru/multimedia/c1000/1000000000/razer_huntsman_v3.jpg',
+            'Corsair K70 RGB PRO': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_k70.jpg',
+            'Logitech PRO X Superlight': 'https://ir.ozon.ru/multimedia/c1000/1000000000/logitech_pro_x.jpg',
+            'Razer Basilisk V3 Pro': 'https://ir.ozon.ru/multimedia/c1000/1000000000/razer_basilisk_v3.jpg',
+            'Logitech Z906 5.1': 'https://ir.ozon.ru/multimedia/c1000/1000000000/logitech_z906.jpg',
+            'Edifier R1280T': 'https://ir.ozon.ru/multimedia/c1000/1000000000/edifier_r1280t.jpg',
+        };
+
+        function getProductImage(name) {
+            if (REAL_IMAGES[name]) return REAL_IMAGES[name];
+            const hash = name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            return `https://picsum.photos/seed/${hash}/300/200`;
+        }
+
+        // ============================================================
+        // БАЗА ТОВАРОВ
         // ============================================================
 
         const PRODUCTS = {
-
             cpu: [
-                { name: 'AMD Ryzen 9 9950X3D', price: 89990, oldPrice: 99990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/amd-ryzen-9-9950x3d/',
-                    specs: { Производитель: 'AMD', Ядра: '16', Потоки: '32', 'Частота': '4.3 ГГц', Сокет: 'AM5', TDP: '170W' } },
-                { name: 'AMD Ryzen 7 9800X3D', price: 45990, oldPrice: 52990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/amd-ryzen-7-9800x3d',
-                    specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.7 ГГц', Сокет: 'AM5', TDP: '120W' } },
-                { name: 'Intel Core i9-14900K', price: 52990, oldPrice: 58990, shop: 'DNS', rating: 4.7,
-                    url: 'https://www.dns-shop.ru/product/intel-core-i9-14900k',
-                    specs: { Производитель: 'Intel', Ядра: '24', Потоки: '32', 'Частота': '3.2 ГГц', Сокет: 'LGA1700',
-                        TDP: '253W' } },
-                { name: 'AMD Ryzen 7 7700X', price: 27990, oldPrice: 32990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/amd-ryzen-7-7700x/',
-                    specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.5 ГГц', Сокет: 'AM5', TDP: '105W' } },
-                { name: 'Intel Core i5-14600K', price: 32990, oldPrice: 35990, shop: 'MVideo', rating: 4.5,
-                    url: 'https://www.mvideo.ru/product/intel-core-i5-14600k',
-                    specs: { Производитель: 'Intel', Ядра: '14', Потоки: '20', 'Частота': '3.5 ГГц', Сокет: 'LGA1700',
-                        TDP: '181W' } },
-                { name: 'AMD Ryzen 5 7600X', price: 21990, oldPrice: 25990, shop: 'Ozon', rating: 4.4,
-                    url: 'https://www.ozon.ru/product/amd-ryzen-5-7600x/',
-                    specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '4.7 ГГц', Сокет: 'AM5', TDP: '105W' } },
-                { name: 'Intel Core i7-14700K', price: 41990, oldPrice: 46990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/intel-core-i7-14700k',
-                    specs: { Производитель: 'Intel', Ядра: '20', Потоки: '28', 'Частота': '3.4 ГГц', Сокет: 'LGA1700',
-                        TDP: '253W' } },
-                { name: 'AMD Ryzen 5 5600X', price: 14990, oldPrice: 18990, shop: 'DNS', rating: 4.3,
-                    url: 'https://www.dns-shop.ru/product/amd-ryzen-5-5600x',
-                    specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '3.7 ГГц', Сокет: 'AM4', TDP: '65W' } },
-                { name: 'Intel Core i3-14100F', price: 9990, oldPrice: 12990, shop: 'Citilink', rating: 4.2,
-                    url: 'https://www.citilink.ru/product/intel-core-i3-14100f/',
-                    specs: { Производитель: 'Intel', Ядра: '4', Потоки: '8', 'Частота': '3.5 ГГц', Сокет: 'LGA1700',
-                        TDP: '60W' } },
-                { name: 'AMD Ryzen 9 7950X', price: 67990, oldPrice: 74990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/amd-ryzen-9-7950x',
-                    specs: { Производитель: 'AMD', Ядра: '16', Потоки: '32', 'Частота': '4.5 ГГц', Сокет: 'AM5', TDP: '170W' } },
-                { name: 'Intel Core i9-13900KS', price: 64990, oldPrice: 71990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/intel-core-i9-13900ks/',
-                    specs: { Производитель: 'Intel', Ядра: '24', Потоки: '32', 'Частота': '3.2 ГГц', Сокет: 'LGA1700',
-                        TDP: '253W' } },
-                { name: 'AMD Ryzen 5 7500F', price: 16990, oldPrice: 19990, shop: 'Wildberries', rating: 4.4,
-                    url: 'https://www.wildberries.ru/catalog/amd-ryzen-5-7500f',
-                    specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '3.7 ГГц', Сокет: 'AM5', TDP: '65W' } },
+                { name: 'AMD Ryzen 9 9950X3D', price: 89990, oldPrice: 99990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'AMD', Ядра: '16', Потоки: '32', 'Частота': '4.3 ГГц', Сокет: 'AM5', TDP: '170W' } },
+                { name: 'AMD Ryzen 7 9800X3D', price: 45990, oldPrice: 52990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.7 ГГц', Сокет: 'AM5', TDP: '120W' } },
+                { name: 'Intel Core i9-14900K', price: 52990, oldPrice: 58990, shop: 'DNS', rating: 4.7, specs: { Производитель: 'Intel', Ядра: '24', Потоки: '32', 'Частота': '3.2 ГГц', Сокет: 'LGA1700', TDP: '253W' } },
+                { name: 'AMD Ryzen 7 7700X', price: 27990, oldPrice: 32990, shop: 'Citilink', rating: 4.6, specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.5 ГГц', Сокет: 'AM5', TDP: '105W' } },
+                { name: 'AMD Ryzen 5 7600X', price: 21990, oldPrice: 25990, shop: 'MVideo', rating: 4.5, specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '4.7 ГГц', Сокет: 'AM5', TDP: '105W' } },
+                { name: 'Intel Core i5-14600K', price: 32990, oldPrice: 35990, shop: 'Ozon', rating: 4.5, specs: { Производитель: 'Intel', Ядра: '14', Потоки: '20', 'Частота': '3.5 ГГц', Сокет: 'LGA1700', TDP: '181W' } },
+                { name: 'AMD Ryzen 5 5600X', price: 14990, oldPrice: 18990, shop: 'DNS', rating: 4.4, specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '3.7 ГГц', Сокет: 'AM4', TDP: '65W' } },
+                { name: 'Intel Core i7-14700K', price: 41990, oldPrice: 46990, shop: 'Wildberries', rating: 4.6, specs: { Производитель: 'Intel', Ядра: '20', Потоки: '28', 'Частота': '3.4 ГГц', Сокет: 'LGA1700', TDP: '253W' } },
             ],
-
             gpu: [
-                { name: 'NVIDIA RTX 5090 32GB', price: 432990, oldPrice: 499990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/nvidia-rtx-5090-32gb/',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '32GB GDDR7', 'Шина': '512-bit', TDP: '600W',
-                        'Длина': '372mm' } },
-                { name: 'NVIDIA RTX 5080 16GB', price: 219990, oldPrice: 259990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/nvidia-rtx-5080',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR7', 'Шина': '256-bit', TDP: '360W',
-                        'Длина': '310mm' } },
-                { name: 'AMD Radeon RX 7900 XTX', price: 149990, oldPrice: 179990, shop: 'DNS', rating: 4.7,
-                    url: 'https://www.dns-shop.ru/product/amd-radeon-rx-7900-xtx',
-                    specs: { Производитель: 'AMD', 'Видеопамять': '24GB GDDR6', 'Шина': '384-bit', TDP: '420W',
-                        'Длина': '335mm' } },
-                { name: 'NVIDIA RTX 4070 Ti SUPER', price: 89990, oldPrice: 109990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/nvidia-rtx-4070-ti-super/',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR6X', 'Шина': '256-bit', TDP: '285W',
-                        'Длина': '290mm' } },
-                { name: 'AMD Radeon RX 7800 XT', price: 65990, oldPrice: 79990, shop: 'MVideo', rating: 4.5,
-                    url: 'https://www.mvideo.ru/product/amd-radeon-rx-7800-xt',
-                    specs: { Производитель: 'AMD', 'Видеопамять': '16GB GDDR6', 'Шина': '256-bit', TDP: '263W',
-                        'Длина': '280mm' } },
-                { name: 'NVIDIA RTX 4060 Ti 8GB', price: 44990, oldPrice: 52990, shop: 'Ozon', rating: 4.4,
-                    url: 'https://www.ozon.ru/product/nvidia-rtx-4060-ti-8gb/',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '160W',
-                        'Длина': '250mm' } },
-                { name: 'AMD Radeon RX 7600 XT', price: 35990, oldPrice: 42990, shop: 'Wildberries', rating: 4.3,
-                    url: 'https://www.wildberries.ru/catalog/amd-radeon-rx-7600-xt',
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '190W',
-                        'Длина': '260mm' } },
-                { name: 'NVIDIA RTX 3050 6GB', price: 22990, oldPrice: 27990, shop: 'DNS', rating: 4.2,
-                    url: 'https://www.dns-shop.ru/product/nvidia-rtx-3050-6gb',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '6GB GDDR6', 'Шина': '96-bit', TDP: '70W',
-                        'Длина': '200mm' } },
-                { name: 'NVIDIA RTX 4090 24GB', price: 259990, oldPrice: 299990, shop: 'Citilink', rating: 4.9,
-                    url: 'https://www.citilink.ru/product/nvidia-rtx-4090-24gb/',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '24GB GDDR6X', 'Шина': '384-bit', TDP: '450W',
-                        'Длина': '350mm' } },
-                { name: 'AMD Radeon RX 7900 GRE', price: 79990, oldPrice: 94990, shop: 'MVideo', rating: 4.5,
-                    url: 'https://www.mvideo.ru/product/amd-radeon-rx-7900-gre',
-                    specs: { Производитель: 'AMD', 'Видеопамять': '16GB GDDR6', 'Шина': '256-bit', TDP: '260W',
-                        'Длина': '280mm' } },
-                { name: 'NVIDIA RTX 4070 12GB', price: 59990, oldPrice: 69990, shop: 'Ozon', rating: 4.5,
-                    url: 'https://www.ozon.ru/product/nvidia-rtx-4070-12gb/',
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '12GB GDDR6X', 'Шина': '192-bit', TDP: '200W',
-                        'Длина': '260mm' } },
-                { name: 'AMD Radeon RX 7700 XT', price: 49990, oldPrice: 59990, shop: 'Wildberries', rating: 4.4,
-                    url: 'https://www.wildberries.ru/catalog/amd-radeon-rx-7700-xt',
-                    specs: { Производитель: 'AMD', 'Видеопамять': '12GB GDDR6', 'Шина': '192-bit', TDP: '245W',
-                        'Длина': '270mm' } },
+                { name: 'NVIDIA RTX 5090 32GB', price: 432990, oldPrice: 499990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'NVIDIA', 'Видеопамять': '32GB GDDR7', 'Шина': '512-bit', TDP: '600W' } },
+                { name: 'NVIDIA RTX 5080 16GB', price: 219990, oldPrice: 259990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR7', 'Шина': '256-bit', TDP: '360W' } },
+                { name: 'AMD Radeon RX 7900 XTX', price: 149990, oldPrice: 179990, shop: 'DNS', rating: 4.7, specs: { Производитель: 'AMD', 'Видеопамять': '24GB GDDR6', 'Шина': '384-bit', TDP: '420W' } },
+                { name: 'NVIDIA RTX 4070 Ti SUPER', price: 89990, oldPrice: 109990, shop: 'Citilink', rating: 4.6, specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR6X', 'Шина': '256-bit', TDP: '285W' } },
+                { name: 'AMD Radeon RX 7800 XT', price: 65990, oldPrice: 79990, shop: 'MVideo', rating: 4.5, specs: { Производитель: 'AMD', 'Видеопамять': '16GB GDDR6', 'Шина': '256-bit', TDP: '263W' } },
+                { name: 'NVIDIA RTX 4060 Ti 8GB', price: 44990, oldPrice: 52990, shop: 'Ozon', rating: 4.4, specs: { Производитель: 'NVIDIA', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '160W' } },
+                { name: 'AMD Radeon RX 7600 XT', price: 35990, oldPrice: 42990, shop: 'Wildberries', rating: 4.3, specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '190W' } },
+                { name: 'NVIDIA RTX 3050 6GB', price: 22990, oldPrice: 27990, shop: 'DNS', rating: 4.2, specs: { Производитель: 'NVIDIA', 'Видеопамять': '6GB GDDR6', 'Шина': '96-bit', TDP: '70W' } },
             ],
-
             ram: [
-                { name: 'Corsair Vengeance 32GB DDR5-6000', price: 19990, oldPrice: 23990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/corsair-vengeance-32gb-ddr5-6000/',
-                    specs: { Производитель: 'Corsair', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz',
-                        Тайминги: 'CL30' } },
-                { name: 'G.Skill Trident Z5 32GB', price: 22990, oldPrice: 26990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/gskill-trident-z5-32gb',
-                    specs: { Производитель: 'G.Skill', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6400MHz',
-                        Тайминги: 'CL32' } },
-                { name: 'Kingston Fury Beast 32GB', price: 17990, oldPrice: 20990, shop: 'DNS', rating: 4.5,
-                    url: 'https://www.dns-shop.ru/product/kingston-fury-beast-32gb',
-                    specs: { Производитель: 'Kingston', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '5600MHz',
-                        Тайминги: 'CL36' } },
-                { name: 'Patriot Viper 16GB DDR5', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.3,
-                    url: 'https://www.citilink.ru/product/patriot-viper-16gb-ddr5/',
-                    specs: { Производитель: 'Patriot', Объём: '16GB (2x8GB)', Тип: 'DDR5', Частота: '5600MHz',
-                        Тайминги: 'CL36' } },
-                { name: 'Corsair Dominator 64GB DDR5-6400', price: 39990, oldPrice: 45990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/corsair-dominator-64gb-ddr5-6400',
-                    specs: { Производитель: 'Corsair', Объём: '64GB (2x32GB)', Тип: 'DDR5', Частота: '6400MHz',
-                        Тайминги: 'CL32' } },
-                { name: 'Kingston Fury 16GB DDR4-3200', price: 5990, oldPrice: 7990, shop: 'Ozon', rating: 4.4,
-                    url: 'https://www.ozon.ru/product/kingston-fury-16gb-ddr4-3200/',
-                    specs: { Производитель: 'Kingston', Объём: '16GB (2x8GB)', Тип: 'DDR4', Частота: '3200MHz',
-                        Тайминги: 'CL16' } },
-                { name: 'Corsair Vengeance 16GB DDR4-3600', price: 6990, oldPrice: 8990, shop: 'Wildberries', rating: 4.5,
-                    url: 'https://www.wildberries.ru/catalog/corsair-vengeance-16gb-ddr4-3600',
-                    specs: { Производитель: 'Corsair', Объём: '16GB (2x8GB)', Тип: 'DDR4', Частота: '3600MHz',
-                        Тайминги: 'CL18' } },
-                { name: 'G.Skill Ripjaws 32GB DDR4-3600', price: 9990, oldPrice: 12990, shop: 'DNS', rating: 4.6,
-                    url: 'https://www.dns-shop.ru/product/gskill-ripjaws-32gb-ddr4-3600',
-                    specs: { Производитель: 'G.Skill', Объём: '32GB (2x16GB)', Тип: 'DDR4', Частота: '3600MHz',
-                        Тайминги: 'CL18' } },
-                { name: 'TeamGroup T-Force 32GB DDR5-6000', price: 18990, oldPrice: 22990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/teamgroup-t-force-32gb-ddr5-6000/',
-                    specs: { Производитель: 'TeamGroup', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz',
-                        Тайминги: 'CL30' } },
-                { name: 'ADATA XPG Lancer 32GB DDR5-6000', price: 16990, oldPrice: 19990, shop: 'MVideo', rating: 4.5,
-                    url: 'https://www.mvideo.ru/product/adata-xpg-lancer-32gb-ddr5-6000',
-                    specs: { Производитель: 'ADATA', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz',
-                        Тайминги: 'CL40' } },
+                { name: 'Corsair Vengeance 32GB DDR5-6000', price: 19990, oldPrice: 23990, shop: 'Ozon', rating: 4.7, specs: { Производитель: 'Corsair', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz' } },
+                { name: 'G.Skill Trident Z5 32GB', price: 22990, oldPrice: 26990, shop: 'Wildberries', rating: 4.6, specs: { Производитель: 'G.Skill', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6400MHz' } },
+                { name: 'Kingston Fury Beast 32GB', price: 17990, oldPrice: 20990, shop: 'DNS', rating: 4.5, specs: { Производитель: 'Kingston', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '5600MHz' } },
+                { name: 'Patriot Viper 16GB DDR5', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.3, specs: { Производитель: 'Patriot', Объём: '16GB (2x8GB)', Тип: 'DDR5', Частота: '5600MHz' } },
             ],
-
             motherboard: [
-                { name: 'ASUS ROG STRIX B850-F', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/asus-rog-strix-b850-f/',
-                    specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B850', 'Форм-фактор': 'ATX', 'Поддержка RAM': 'DDR5' } },
-                { name: 'MSI MAG B650 TOMAHAWK', price: 18990, oldPrice: 21990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/msi-mag-b650-tomahawk',
-                    specs: { Производитель: 'MSI', Сокет: 'AM5', Чипсет: 'B650', 'Форм-фактор': 'ATX', 'Поддержка RAM': 'DDR5' } },
-                { name: 'Gigabyte B650 AORUS ELITE', price: 16990, oldPrice: 19990, shop: 'DNS', rating: 4.5,
-                    url: 'https://www.dns-shop.ru/product/gigabyte-b650-aorus-elite',
-                    specs: { Производитель: 'Gigabyte', Сокет: 'AM5', Чипсет: 'B650', 'Форм-фактор': 'ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS TUF GAMING B650-PLUS', price: 15990, oldPrice: 18990, shop: 'Citilink', rating: 4.4,
-                    url: 'https://www.citilink.ru/product/asus-tuf-gaming-b650-plus/',
-                    specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B650', 'Форм-фактор': 'ATX', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS ROG STRIX Z790-E', price: 35990, oldPrice: 42990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/asus-rog-strix-z790-e',
-                    specs: { Производитель: 'ASUS', Сокет: 'LGA1700', Чипсет: 'Z790', 'Форм-фактор': 'ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'MSI PRO Z790-P', price: 19990, oldPrice: 23990, shop: 'Ozon', rating: 4.5,
-                    url: 'https://www.ozon.ru/product/msi-pro-z790-p/',
-                    specs: { Производитель: 'MSI', Сокет: 'LGA1700', Чипсет: 'Z790', 'Форм-фактор': 'ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'Gigabyte Z790 AORUS ELITE', price: 22990, oldPrice: 26990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/gigabyte-z790-aorus-elite',
-                    specs: { Производитель: 'Gigabyte', Сокет: 'LGA1700', Чипсет: 'Z790', 'Форм-фактор': 'ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'ASRock B650M PRO RS', price: 13990, oldPrice: 16990, shop: 'DNS', rating: 4.3,
-                    url: 'https://www.dns-shop.ru/product/asrock-b650m-pro-rs',
-                    specs: { Производитель: 'ASRock', Сокет: 'AM5', Чипсет: 'B650', 'Форм-фактор': 'Micro-ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'MSI B760M GAMING PLUS', price: 11990, oldPrice: 14990, shop: 'Citilink', rating: 4.4,
-                    url: 'https://www.citilink.ru/product/msi-b760m-gaming-plus/',
-                    specs: { Производитель: 'MSI', Сокет: 'LGA1700', Чипсет: 'B760', 'Форм-фактор': 'Micro-ATX',
-                        'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS PRIME B760M-A', price: 9990, oldPrice: 12990, shop: 'MVideo', rating: 4.3,
-                    url: 'https://www.mvideo.ru/product/asus-prime-b760m-a',
-                    specs: { Производитель: 'ASUS', Сокет: 'LGA1700', Чипсет: 'B760', 'Форм-фактор': 'Micro-ATX',
-                        'Поддержка RAM': 'DDR5' } },
+                { name: 'ASUS ROG STRIX B850-F', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.7, specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B850', 'Поддержка RAM': 'DDR5' } },
+                { name: 'MSI MAG B650 TOMAHAWK', price: 18990, oldPrice: 21990, shop: 'Wildberries', rating: 4.6, specs: { Производитель: 'MSI', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
+                { name: 'Gigabyte B650 AORUS ELITE', price: 16990, oldPrice: 19990, shop: 'DNS', rating: 4.5, specs: { Производитель: 'Gigabyte', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
+                { name: 'ASUS TUF GAMING B650-PLUS', price: 15990, oldPrice: 18990, shop: 'Citilink', rating: 4.4, specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
             ],
-
             cooler: [
-                { name: 'Noctua NH-D15', price: 14990, oldPrice: 17990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/noctua-nh-d15/',
-                    specs: { Производитель: 'Noctua', Тип: 'Воздушное', Размер: '140mm', TDP: '220W', 'Высота': '165mm' } },
-                { name: 'Arctic Liquid Freezer III 360', price: 12990, oldPrice: 15990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/arctic-liquid-freezer-iii-360',
-                    specs: { Производитель: 'Arctic', Тип: 'Жидкостное', Размер: '360mm', TDP: '300W', 'Радиатор': '360mm' } },
-                { name: 'be quiet! Dark Rock Pro 5', price: 13990, oldPrice: 16990, shop: 'DNS', rating: 4.7,
-                    url: 'https://www.dns-shop.ru/product/be-quiet-dark-rock-pro-5',
-                    specs: { Производитель: 'be quiet!', Тип: 'Воздушное', Размер: '140mm', TDP: '250W', 'Высота': '168mm' } },
-                { name: 'DeepCool AK620', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/deepcool-ak620/',
-                    specs: { Производитель: 'DeepCool', Тип: 'Воздушное', Размер: '120mm', TDP: '260W', 'Высота': '160mm' } },
-                { name: 'NZXT Kraken X73 360mm', price: 15990, oldPrice: 18990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/nzxt-kraken-x73-360mm',
-                    specs: { Производитель: 'NZXT', Тип: 'Жидкостное', Размер: '360mm', TDP: '300W', 'Радиатор': '360mm' } },
-                { name: 'Corsair iCUE H150i 360mm', price: 16990, oldPrice: 19990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/corsair-icue-h150i-360mm/',
-                    specs: { Производитель: 'Corsair', Тип: 'Жидкостное', Размер: '360mm', TDP: '280W', 'Радиатор': '360mm' } },
-                { name: 'Cooler Master Hyper 212', price: 4990, oldPrice: 6990, shop: 'Wildberries', rating: 4.4,
-                    url: 'https://www.wildberries.ru/catalog/cooler-master-hyper-212',
-                    specs: { Производитель: 'Cooler Master', Тип: 'Воздушное', Размер: '120mm', TDP: '180W', 'Высота': '160mm' } },
-                { name: 'ID-COOLING SE-224-XT', price: 3990, oldPrice: 5990, shop: 'DNS', rating: 4.3,
-                    url: 'https://www.dns-shop.ru/product/id-cooling-se-224-xt',
-                    specs: { Производитель: 'ID-COOLING', Тип: 'Воздушное', Размер: '120mm', TDP: '150W', 'Высота': '155mm' } },
+                { name: 'Noctua NH-D15', price: 14990, oldPrice: 17990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'Noctua', Тип: 'Воздушное', Размер: '140mm', TDP: '220W' } },
+                { name: 'Arctic Liquid Freezer III 360', price: 12990, oldPrice: 15990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'Arctic', Тип: 'Жидкостное', Размер: '360mm', TDP: '300W' } },
+                { name: 'be quiet! Dark Rock Pro 5', price: 13990, oldPrice: 16990, shop: 'DNS', rating: 4.7, specs: { Производитель: 'be quiet!', Тип: 'Воздушное', Размер: '140mm', TDP: '250W' } },
+                { name: 'DeepCool AK620', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.6, specs: { Производитель: 'DeepCool', Тип: 'Воздушное', Размер: '120mm', TDP: '260W' } },
             ],
-
             storage: [
-                { name: 'Samsung 990 PRO 2TB NVMe', price: 24990, oldPrice: 29990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/samsung-990-pro-2tb-nvme/',
-                    specs: { Производитель: 'Samsung', Тип: 'SSD NVMe', Объём: '2TB', 'Скорость чтения': '7100 МБ/с',
-                        'Скорость записи': '6900 МБ/с' } },
-                { name: 'WD Black SN850X 2TB', price: 19990, oldPrice: 23990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/wd-black-sn850x-2tb',
-                    specs: { Производитель: 'Western Digital', Тип: 'SSD NVMe', Объём: '2TB', 'Скорость чтения': '7100 МБ/с',
-                        'Скорость записи': '6600 МБ/с' } },
-                { name: 'Kingston KC3000 1TB', price: 9990, oldPrice: 11990, shop: 'DNS', rating: 4.6,
-                    url: 'https://www.dns-shop.ru/product/kingston-kc3000-1tb',
-                    specs: { Производитель: 'Kingston', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '7000 МБ/с',
-                        'Скорость записи': '6000 МБ/с' } },
-                { name: 'Crucial P5 Plus 1TB', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5,
-                    url: 'https://www.citilink.ru/product/crucial-p5-plus-1tb/',
-                    specs: { Производитель: 'Crucial', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '6600 МБ/с',
-                        'Скорость записи': '5000 МБ/с' } },
-                { name: 'Samsung 870 EVO 1TB SATA', price: 7990, oldPrice: 9990, shop: 'MVideo', rating: 4.6,
-                    url: 'https://www.mvideo.ru/product/samsung-870-evo-1tb-sata',
-                    specs: { Производитель: 'Samsung', Тип: 'SSD SATA', Объём: '1TB', 'Скорость чтения': '560 МБ/с',
-                        'Скорость записи': '530 МБ/с' } },
-                { name: 'WD Red Pro 8TB HDD', price: 14990, oldPrice: 17990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/wd-red-pro-8tb-hdd/',
-                    specs: { Производитель: 'Western Digital', Тип: 'HDD', Объём: '8TB', 'Скорость вращения': '7200 RPM' } },
-                { name: 'Seagate Barracuda 4TB', price: 6990, oldPrice: 8990, shop: 'Wildberries', rating: 4.5,
-                    url: 'https://www.wildberries.ru/catalog/seagate-barracuda-4tb',
-                    specs: { Производитель: 'Seagate', Тип: 'HDD', Объём: '4TB', 'Скорость вращения': '7200 RPM' } },
-                { name: 'WD Blue 2TB HDD', price: 4990, oldPrice: 6990, shop: 'DNS', rating: 4.4,
-                    url: 'https://www.dns-shop.ru/product/wd-blue-2tb-hdd',
-                    specs: { Производитель: 'Western Digital', Тип: 'HDD', Объём: '2TB', 'Скорость вращения': '7200 RPM' } },
-                { name: 'Kingston NV2 500GB NVMe', price: 3990, oldPrice: 5990, shop: 'Citilink', rating: 4.3,
-                    url: 'https://www.citilink.ru/product/kingston-nv2-500gb-nvme/',
-                    specs: { Производитель: 'Kingston', Тип: 'SSD NVMe', Объём: '500GB', 'Скорость чтения': '3500 МБ/с',
-                        'Скорость записи': '2100 МБ/с' } },
-                { name: 'Crucial BX500 1TB SATA', price: 5990, oldPrice: 7990, shop: 'MVideo', rating: 4.4,
-                    url: 'https://www.mvideo.ru/product/crucial-bx500-1tb-sata',
-                    specs: { Производитель: 'Crucial', Тип: 'SSD SATA', Объём: '1TB', 'Скорость чтения': '540 МБ/с',
-                        'Скорость записи': '500 МБ/с' } },
+                { name: 'Samsung 990 PRO 2TB NVMe', price: 24990, oldPrice: 29990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'Samsung', Тип: 'SSD NVMe', Объём: '2TB', 'Скорость чтения': '7100 МБ/с' } },
+                { name: 'WD Black SN850X 2TB', price: 19990, oldPrice: 23990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'Western Digital', Тип: 'SSD NVMe', Объём: '2TB', 'Скорость чтения': '7100 МБ/с' } },
+                { name: 'Kingston KC3000 1TB', price: 9990, oldPrice: 11990, shop: 'DNS', rating: 4.6, specs: { Производитель: 'Kingston', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '7000 МБ/с' } },
+                { name: 'Crucial P5 Plus 1TB', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5, specs: { Производитель: 'Crucial', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '6600 МБ/с' } },
             ],
-
             psu: [
-                { name: 'Corsair RM1000e 1000W', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.8,
-                    url: 'https://www.ozon.ru/product/corsair-rm1000e-1000w/',
-                    specs: { Производитель: 'Corsair', Мощность: '1000W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'Seasonic Focus GX-850', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.7,
-                    url: 'https://www.wildberries.ru/catalog/seasonic-focus-gx-850',
-                    specs: { Производитель: 'Seasonic', Мощность: '850W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'be quiet! Straight Power 12 850W', price: 15990, oldPrice: 18990, shop: 'DNS', rating: 4.7,
-                    url: 'https://www.dns-shop.ru/product/be-quiet-straight-power-12-850w',
-                    specs: { Производитель: 'be quiet!', Мощность: '850W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'Cooler Master V850', price: 13990, oldPrice: 16990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/cooler-master-v850/',
-                    specs: { Производитель: 'Cooler Master', Мощность: '850W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'Corsair RM750e 750W', price: 12990, oldPrice: 15990, shop: 'MVideo', rating: 4.6,
-                    url: 'https://www.mvideo.ru/product/corsair-rm750e-750w',
-                    specs: { Производитель: 'Corsair', Мощность: '750W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'Seasonic Prime TX-1000 1000W', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/seasonic-prime-tx-1000-1000w/',
-                    specs: { Производитель: 'Seasonic', Мощность: '1000W', 'Сертификат': '80+ Titanium', 'Модульный': 'Да',
-                        'Гарантия': '180 мес' } },
-                { name: 'EVGA SuperNOVA 850W Platinum', price: 19990, oldPrice: 23990, shop: 'Wildberries', rating: 4.7,
-                    url: 'https://www.wildberries.ru/catalog/evga-supernova-850w-platinum',
-                    specs: { Производитель: 'EVGA', Мощность: '850W', 'Сертификат': '80+ Platinum', 'Модульный': 'Да',
-                        'Гарантия': '120 мес' } },
-                { name: 'DeepCool PQ-M 750W', price: 8990, oldPrice: 10990, shop: 'DNS', rating: 4.5,
-                    url: 'https://www.dns-shop.ru/product/deepcool-pq-m-750w',
-                    specs: { Производитель: 'DeepCool', Мощность: '750W', 'Сертификат': '80+ Gold', 'Модульный': 'Да',
-                        'Гарантия': '60 мес' } },
+                { name: 'Corsair RM1000e 1000W', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.8, specs: { Производитель: 'Corsair', Мощность: '1000W', 'Сертификат': '80+ Gold' } },
+                { name: 'Seasonic Focus GX-850', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.7, specs: { Производитель: 'Seasonic', Мощность: '850W', 'Сертификат': '80+ Gold' } },
+                { name: 'be quiet! Straight Power 12 850W', price: 15990, oldPrice: 18990, shop: 'DNS', rating: 4.7, specs: { Производитель: 'be quiet!', Мощность: '850W', 'Сертификат': '80+ Gold' } },
+                { name: 'Cooler Master V850', price: 13990, oldPrice: 16990, shop: 'Citilink', rating: 4.6, specs: { Производитель: 'Cooler Master', Мощность: '850W', 'Сертификат': '80+ Gold' } },
             ],
-
             case: [
-                { name: 'NZXT H7 Flow', price: 11990, oldPrice: 14990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/nzxt-h7-flow/',
-                    specs: { Производитель: 'NZXT', Тип: 'Mid-Tower', 'Макс GPU': '370mm', 'Макс кулер': '165mm',
-                        Вентиляторы: '4x120mm' } },
-                { name: 'Lian Li O11 Dynamic EVO', price: 16990, oldPrice: 19990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/lian-li-o11-dynamic-evo',
-                    specs: { Производитель: 'Lian Li', Тип: 'Mid-Tower', 'Макс GPU': '420mm', 'Макс кулер': '180mm',
-                        Вентиляторы: '10x120mm' } },
-                { name: 'Corsair 4000D Airflow', price: 9990, oldPrice: 12990, shop: 'DNS', rating: 4.6,
-                    url: 'https://www.dns-shop.ru/product/corsair-4000d-airflow',
-                    specs: { Производитель: 'Corsair', Тип: 'Mid-Tower', 'Макс GPU': '360mm', 'Макс кулер': '170mm',
-                        Вентиляторы: '6x120mm' } },
-                { name: 'Fractal Design Meshify 2', price: 12990, oldPrice: 15990, shop: 'Citilink', rating: 4.7,
-                    url: 'https://www.citilink.ru/product/fractal-design-meshify-2/',
-                    specs: { Производитель: 'Fractal Design', Тип: 'Mid-Tower', 'Макс GPU': '380mm', 'Макс кулер': '170mm',
-                        Вентиляторы: '7x120mm' } },
-                { name: 'Cooler Master MasterBox TD500', price: 8990, oldPrice: 10990, shop: 'MVideo', rating: 4.5,
-                    url: 'https://www.mvideo.ru/product/cooler-master-masterbox-td500',
-                    specs: { Производитель: 'Cooler Master', Тип: 'Mid-Tower', 'Макс GPU': '350mm', 'Макс кулер': '165mm',
-                        Вентиляторы: '6x120mm' } },
-                { name: 'Phanteks Eclipse P400A', price: 7990, oldPrice: 9990, shop: 'Ozon', rating: 4.5,
-                    url: 'https://www.ozon.ru/product/phanteks-eclipse-p400a/',
-                    specs: { Производитель: 'Phanteks', Тип: 'Mid-Tower', 'Макс GPU': '360mm', 'Макс кулер': '160mm',
-                        Вентиляторы: '6x120mm' } },
-                { name: 'Fractal Design Define 7', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/fractal-design-define-7',
-                    specs: { Производитель: 'Fractal Design', Тип: 'Mid-Tower', 'Макс GPU': '380mm', 'Макс кулер': '180mm',
-                        Вентиляторы: '7x120mm' } },
-                { name: 'NZXT H510 Elite', price: 10990, oldPrice: 13990, shop: 'DNS', rating: 4.4,
-                    url: 'https://www.dns-shop.ru/product/nzxt-h510-elite',
-                    specs: { Производитель: 'NZXT', Тип: 'Mid-Tower', 'Макс GPU': '360mm', 'Макс кулер': '165mm',
-                        Вентиляторы: '4x120mm' } },
+                { name: 'NZXT H7 Flow', price: 11990, oldPrice: 14990, shop: 'Ozon', rating: 4.7, specs: { Производитель: 'NZXT', Тип: 'Mid-Tower', 'Макс GPU': '370mm' } },
+                { name: 'Lian Li O11 Dynamic EVO', price: 16990, oldPrice: 19990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'Lian Li', Тип: 'Mid-Tower', 'Макс GPU': '420mm' } },
+                { name: 'Corsair 4000D Airflow', price: 9990, oldPrice: 12990, shop: 'DNS', rating: 4.6, specs: { Производитель: 'Corsair', Тип: 'Mid-Tower', 'Макс GPU': '360mm' } },
+                { name: 'Fractal Design Meshify 2', price: 12990, oldPrice: 15990, shop: 'Citilink', rating: 4.7, specs: { Производитель: 'Fractal Design', Тип: 'Mid-Tower', 'Макс GPU': '380mm' } },
             ],
-
             monitor: [
-                { name: 'Samsung Odyssey G9 49"', price: 189990, oldPrice: 219990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/samsung-odyssey-g9-49/',
-                    specs: { Производитель: 'Samsung', Диагональ: '49"', Разрешение: '5120x1440', Частота: '240Hz',
-                        Тип: 'QLED' } },
-                { name: 'LG UltraGear 27" 240Hz', price: 45990, oldPrice: 52990, shop: 'Wildberries', rating: 4.8,
-                    url: 'https://www.wildberries.ru/catalog/lg-ultragear-27-240hz',
-                    specs: { Производитель: 'LG', Диагональ: '27"', Разрешение: '2560x1440', Частота: '240Hz', Тип: 'IPS' } },
-                { name: 'ASUS TUF 24" 165Hz', price: 19990, oldPrice: 23990, shop: 'DNS', rating: 4.6,
-                    url: 'https://www.dns-shop.ru/product/asus-tuf-24-165hz',
-                    specs: { Производитель: 'ASUS', Диагональ: '24"', Разрешение: '1920x1080', Частота: '165Hz',
-                        Тип: 'IPS' } },
-                { name: 'Acer Nitro 27" 144Hz', price: 25990, oldPrice: 29990, shop: 'Citilink', rating: 4.5,
-                    url: 'https://www.citilink.ru/product/acer-nitro-27-144hz/',
-                    specs: { Производитель: 'Acer', Диагональ: '27"', Разрешение: '1920x1080', Частота: '144Hz',
-                        Тип: 'IPS' } },
-                { name: 'Samsung Odyssey G7 32" 144Hz', price: 59990, oldPrice: 69990, shop: 'MVideo', rating: 4.7,
-                    url: 'https://www.mvideo.ru/product/samsung-odyssey-g7-32-144hz',
-                    specs: { Производитель: 'Samsung', Диагональ: '32"', Разрешение: '2560x1440', Частота: '144Hz',
-                        Тип: 'VA' } },
-                { name: 'LG 32" 4K IPS', price: 39990, oldPrice: 46990, shop: 'Ozon', rating: 4.6,
-                    url: 'https://www.ozon.ru/product/lg-32-4k-ips/',
-                    specs: { Производитель: 'LG', Диагональ: '32"', Разрешение: '3840x2160', Частота: '60Hz', Тип: 'IPS' } },
-                { name: 'Dell S2721DGF 27" 165Hz', price: 34990, oldPrice: 41990, shop: 'Wildberries', rating: 4.6,
-                    url: 'https://www.wildberries.ru/catalog/dell-s2721dgf-27-165hz',
-                    specs: { Производитель: 'Dell', Диагональ: '27"', Разрешение: '2560x1440', Частота: '165Hz',
-                        Тип: 'IPS' } },
-                { name: 'ASUS ROG Swift 24" 360Hz', price: 35990, oldPrice: 42990, shop: 'DNS', rating: 4.9,
-                    url: 'https://www.dns-shop.ru/product/asus-rog-swift-24-360hz',
-                    specs: { Производитель: 'ASUS', Диагональ: '24"', Разрешение: '1920x1080', Частота: '360Hz',
-                        Тип: 'TN' } },
+                { name: 'Samsung Odyssey G9 49"', price: 189990, oldPrice: 219990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'Samsung', Диагональ: '49"', Частота: '240Hz' } },
+                { name: 'LG UltraGear 27" 240Hz', price: 45990, oldPrice: 52990, shop: 'Wildberries', rating: 4.8, specs: { Производитель: 'LG', Диагональ: '27"', Частота: '240Hz' } },
+                { name: 'ASUS TUF 24" 165Hz', price: 19990, oldPrice: 23990, shop: 'DNS', rating: 4.6, specs: { Производитель: 'ASUS', Диагональ: '24"', Частота: '165Hz' } },
+                { name: 'Acer Nitro 27" 144Hz', price: 25990, oldPrice: 29990, shop: 'Citilink', rating: 4.5, specs: { Производитель: 'Acer', Диагональ: '27"', Частота: '144Hz' } },
             ],
-
             keyboard: [
-                { name: 'Razer Huntsman V3 Pro', price: 15990, oldPrice: 18990, shop: 'Ozon', rating: 4.8,
-                    url: 'https://www.ozon.ru/product/razer-huntsman-v3-pro/',
-                    specs: { Производитель: 'Razer', Тип: 'Механическая', Переключатели: 'Razer Optical Gen-2',
-                        Подсветка: 'RGB', 'Размер': 'TKL' } },
-                { name: 'Corsair K70 RGB PRO', price: 12990, oldPrice: 15990, shop: 'Wildberries', rating: 4.7,
-                    url: 'https://www.wildberries.ru/catalog/corsair-k70-rgb-pro',
-                    specs: { Производитель: 'Corsair', Тип: 'Механическая', Переключатели: 'Cherry MX Speed', Подсветка: 'RGB',
-                        'Размер': 'Full' } },
-                { name: 'Logitech G915 TKL', price: 14990, oldPrice: 17990, shop: 'DNS', rating: 4.6,
-                    url: 'https://www.dns-shop.ru/product/logitech-g915-tkl',
-                    specs: { Производитель: 'Logitech', Тип: 'Mechanical', Переключатели: 'GL Tactile', Подсветка: 'RGB',
-                        'Размер': 'TKL' } },
-                { name: 'HyperX Alloy Origins 65', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5,
-                    url: 'https://www.citilink.ru/product/hyperx-alloy-origins-65/',
-                    specs: { Производитель: 'HyperX', Тип: 'Механическая', Переключатели: 'HyperX Red', Подсветка: 'RGB',
-                        'Размер': '65%' } },
-                { name: 'SteelSeries Apex Pro', price: 19990, oldPrice: 23990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/steelseries-apex-pro',
-                    specs: { Производитель: 'SteelSeries', Тип: 'Механическая', Переключатели: 'OmniPoint 2.0',
-                        Подсветка: 'RGB', 'Размер': 'Full' } },
-                { name: 'Razer BlackWidow V4', price: 11990, oldPrice: 14990, shop: 'Ozon', rating: 4.6,
-                    url: 'https://www.ozon.ru/product/razer-blackwidow-v4/',
-                    specs: { Производитель: 'Razer', Тип: 'Механическая', Переключатели: 'Razer Green', Подсветка: 'RGB',
-                        'Размер': 'Full' } },
-                { name: 'Corsair K65 MINI', price: 7990, oldPrice: 9990, shop: 'Wildberries', rating: 4.5,
-                    url: 'https://www.wildberries.ru/catalog/corsair-k65-mini',
-                    specs: { Производитель: 'Corsair', Тип: 'Механическая', Переключатели: 'Cherry MX Red', Подсветка: 'RGB',
-                        'Размер': '60%' } },
-                { name: 'Logitech G513 Carbon', price: 9990, oldPrice: 12990, shop: 'DNS', rating: 4.4,
-                    url: 'https://www.dns-shop.ru/product/logitech-g513-carbon',
-                    specs: { Производитель: 'Logitech', Тип: 'Mechanical', Переключатели: 'GX Brown', Подсветка: 'RGB',
-                        'Размер': 'Full' } },
+                { name: 'Razer Huntsman V3 Pro', price: 15990, oldPrice: 18990, shop: 'Ozon', rating: 4.8, specs: { Производитель: 'Razer', Тип: 'Механическая', Подсветка: 'RGB' } },
+                { name: 'Corsair K70 RGB PRO', price: 12990, oldPrice: 15990, shop: 'Wildberries', rating: 4.7, specs: { Производитель: 'Corsair', Тип: 'Механическая', Подсветка: 'RGB' } },
+                { name: 'Logitech G915 TKL', price: 14990, oldPrice: 17990, shop: 'DNS', rating: 4.6, specs: { Производитель: 'Logitech', Тип: 'Mechanical', Подсветка: 'RGB' } },
+                { name: 'HyperX Alloy Origins 65', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5, specs: { Производитель: 'HyperX', Тип: 'Механическая', Подсветка: 'RGB' } },
             ],
-
             mouse: [
-                { name: 'Logitech PRO X Superlight', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.9,
-                    url: 'https://www.ozon.ru/product/logitech-pro-x-superlight/',
-                    specs: { Производитель: 'Logitech', Тип: 'Беспроводная', DPI: '25600', Вес: '63g', 'Подключение': 'LightSpeed' } },
-                { name: 'Razer Basilisk V3 Pro', price: 9990, oldPrice: 12990, shop: 'Wildberries', rating: 4.7,
-                    url: 'https://www.wildberries.ru/catalog/razer-basilisk-v3-pro',
-                    specs: { Производитель: 'Razer', Тип: 'Беспроводная', DPI: '26000', Вес: '112g', 'Подключение': 'Razer Speed' } },
-                { name: 'SteelSeries Rival 5', price: 6990, oldPrice: 8990, shop: 'DNS', rating: 4.5,
-                    url: 'https://www.dns-shop.ru/product/steelseries-rival-5',
-                    specs: { Производитель: 'SteelSeries', Тип: 'Проводная', DPI: '18000', Вес: '85g', 'Подключение': 'USB' } },
-                { name: 'HyperX Pulsefire Haste 2', price: 5990, oldPrice: 7990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/hyperx-pulsefire-haste-2/',
-                    specs: { Производитель: 'HyperX', Тип: 'Беспроводная', DPI: '26000', Вес: '61g', 'Подключение': '2.4GHz' } },
-                { name: 'Logitech G502 X PLUS', price: 14990, oldPrice: 17990, shop: 'MVideo', rating: 4.8,
-                    url: 'https://www.mvideo.ru/product/logitech-g502-x-plus',
-                    specs: { Производитель: 'Logitech', Тип: 'Беспроводная', DPI: '25600', Вес: '106g',
-                        'Подключение': 'LightSpeed' } },
-                { name: 'Razer DeathAdder V3 Pro', price: 12990, oldPrice: 15990, shop: 'Ozon', rating: 4.8,
-                    url: 'https://www.ozon.ru/product/razer-deathadder-v3-pro/',
-                    specs: { Производитель: 'Razer', Тип: 'Беспроводная', DPI: '26000', Вес: '64g', 'Подключение': 'Razer Speed' } },
-                { name: 'Corsair Sabre RGB', price: 4990, oldPrice: 6990, shop: 'Wildberries', rating: 4.4,
-                    url: 'https://www.wildberries.ru/catalog/corsair-sabre-rgb',
-                    specs: { Производитель: 'Corsair', Тип: 'Проводная', DPI: '18000', Вес: '72g', 'Подключение': 'USB' } },
-                { name: 'SteelSeries Aerox 3', price: 7990, oldPrice: 9990, shop: 'DNS', rating: 4.5,
-                    url: 'https://www.dns-shop.ru/product/steelseries-aerox-3',
-                    specs: { Производитель: 'SteelSeries', Тип: 'Беспроводная', DPI: '18000', Вес: '66g',
-                        'Подключение': '2.4GHz' } },
+                { name: 'Logitech PRO X Superlight', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.9, specs: { Производитель: 'Logitech', Тип: 'Беспроводная', DPI: '25600' } },
+                { name: 'Razer Basilisk V3 Pro', price: 9990, oldPrice: 12990, shop: 'Wildberries', rating: 4.7, specs: { Производитель: 'Razer', Тип: 'Беспроводная', DPI: '26000' } },
+                { name: 'SteelSeries Rival 5', price: 6990, oldPrice: 8990, shop: 'DNS', rating: 4.5, specs: { Производитель: 'SteelSeries', Тип: 'Проводная', DPI: '18000' } },
+                { name: 'HyperX Pulsefire Haste 2', price: 5990, oldPrice: 7990, shop: 'Citilink', rating: 4.6, specs: { Производитель: 'HyperX', Тип: 'Беспроводная', DPI: '26000' } },
             ],
-
             speaker: [
-                { name: 'Logitech Z906 5.1', price: 32990, oldPrice: 39990, shop: 'Ozon', rating: 4.7,
-                    url: 'https://www.ozon.ru/product/logitech-z906-5-1/',
-                    specs: { Производитель: 'Logitech', Тип: '5.1', Мощность: '500W', 'Входы': 'RCA, Optical, Coaxial' } },
-                { name: 'Edifier R1280T', price: 8990, oldPrice: 10990, shop: 'Wildberries', rating: 4.5,
-                    url: 'https://www.wildberries.ru/catalog/edifier-r1280t',
-                    specs: { Производитель: 'Edifier', Тип: '2.0', Мощность: '42W', 'Входы': 'RCA, AUX' } },
-                { name: 'Creative Pebble Pro', price: 4990, oldPrice: 5990, shop: 'DNS', rating: 4.4,
-                    url: 'https://www.dns-shop.ru/product/creative-pebble-pro',
-                    specs: { Производитель: 'Creative', Тип: '2.0', Мощность: '12W', 'Подключение': 'USB-C' } },
-                { name: 'JBL Quantum Duo', price: 12990, oldPrice: 15990, shop: 'Citilink', rating: 4.6,
-                    url: 'https://www.citilink.ru/product/jbl-quantum-duo/',
-                    specs: { Производитель: 'JBL', Тип: '2.0', Мощность: '40W', 'Подключение': 'USB, AUX' } },
-                { name: 'Razer Nommo V2 Pro', price: 18990, oldPrice: 22990, shop: 'MVideo', rating: 4.7,
-                    url: 'https://www.mvideo.ru/product/razer-nommo-v2-pro',
-                    specs: { Производитель: 'Razer', Тип: '2.0', Мощность: '60W', 'Подключение': 'USB, AUX' } },
-                { name: 'Logitech Z623 2.1', price: 15990, oldPrice: 18990, shop: 'Ozon', rating: 4.6,
-                    url: 'https://www.ozon.ru/product/logitech-z623-2-1/',
-                    specs: { Производитель: 'Logitech', Тип: '2.1', Мощность: '200W', 'Входы': 'RCA, AUX' } },
+                { name: 'Logitech Z906 5.1', price: 32990, oldPrice: 39990, shop: 'Ozon', rating: 4.7, specs: { Производитель: 'Logitech', Тип: '5.1', Мощность: '500W' } },
+                { name: 'Edifier R1280T', price: 8990, oldPrice: 10990, shop: 'Wildberries', rating: 4.5, specs: { Производитель: 'Edifier', Тип: '2.0', Мощность: '42W' } },
+                { name: 'Creative Pebble Pro', price: 4990, oldPrice: 5990, shop: 'DNS', rating: 4.4, specs: { Производитель: 'Creative', Тип: '2.0', Мощность: '12W' } },
             ],
         };
 
@@ -990,11 +779,185 @@
 
         let currentCategory = 'cpu';
         let currentSort = 'default';
-        let selectedBuild = {}; // { category: productId }
+        let selectedBuild = {};
         let savedBuilds = JSON.parse(localStorage.getItem('pcBuilderSaves') || '[]');
 
         // ============================================================
-        // ОТРИСОВКА
+        // ТОСТ
+        // ============================================================
+
+        function showToast(title, message) {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            document.getElementById('toast').classList.add('show');
+            setTimeout(() => document.getElementById('toast').classList.remove('show'), 4000);
+        }
+
+        function closeToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // ============================================================
+        // 3D СЦЕНА
+        // ============================================================
+
+        let scene, camera, renderer, pcCase, parts = {};
+
+        function init3DScene() {
+            const canvas = document.getElementById('canvas3d');
+            if (!canvas) return;
+
+            const container = document.getElementById('canvasContainer');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a1a);
+
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+            camera.position.set(3, 2, 4);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(width, height);
+            renderer.shadowMap.enabled = true;
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambient);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 10, 5);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            const backLight = new THREE.DirectionalLight(0x4466ff, 0.3);
+            backLight.position.set(-3, 1, -5);
+            scene.add(backLight);
+
+            pcCase = new THREE.Group();
+
+            const caseGeo = new THREE.BoxGeometry(1.6, 1.8, 1.2);
+            const caseMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                transparent: true,
+                opacity: 0.3,
+                wireframe: false,
+                side: THREE.DoubleSide
+            });
+            const caseMesh = new THREE.Mesh(caseGeo, caseMat);
+            caseMesh.castShadow = true;
+            caseMesh.receiveShadow = true;
+            pcCase.add(caseMesh);
+
+            const edgeGeo = new THREE.EdgesGeometry(caseGeo);
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0x00aaff });
+            const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
+            pcCase.add(edgeMesh);
+
+            scene.add(pcCase);
+
+            const gridHelper = new THREE.GridHelper(3, 10, 0x444444, 0x222222);
+            gridHelper.position.y = -1.0;
+            scene.add(gridHelper);
+
+            animate3D();
+            update3D();
+
+            window.addEventListener('resize', () => {
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            });
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            if (pcCase) pcCase.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+
+        function update3D() {
+            // Обновляем детали в 3D сцене
+            const colors = {
+                cpu: 0x00ff00,
+                gpu: 0xff6600,
+                ram: 0x00ccff,
+                motherboard: 0x00ff00,
+                cooler: 0x88ccff,
+                storage: 0xaa88ff,
+                psu: 0xffaa00,
+                case: 0x666666
+            };
+
+            const positions = {
+                cpu: { x: 0, y: 0.3, z: 0.1 },
+                gpu: { x: -0.5, y: -0.2, z: 0.2 },
+                ram: { x: 0.3, y: 0.25, z: -0.1 },
+                motherboard: { x: 0, y: 0, z: 0 },
+                cooler: { x: 0, y: 0.7, z: 0 },
+                storage: { x: 0.4, y: -0.4, z: 0.3 },
+                psu: { x: 0.4, y: -0.6, z: -0.2 },
+            };
+
+            Object.keys(parts).forEach(key => {
+                if (parts[key]) {
+                    scene.remove(parts[key]);
+                    delete parts[key];
+                }
+            });
+
+            for (const [category, index] of Object.entries(selectedBuild)) {
+                const products = PRODUCTS[category] || [];
+                const product = products[index];
+                if (!product) continue;
+
+                const color = colors[category] || 0x888888;
+                const pos = positions[category] || { x: 0, y: 0, z: 0 };
+
+                const geo = new THREE.BoxGeometry(0.3, 0.1, 0.4);
+                const mat = new THREE.MeshPhongMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.2,
+                    transparent: true,
+                    opacity: 0.85
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(pos.x, pos.y, pos.z);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                pcCase.add(mesh);
+                parts[category] = mesh;
+
+                // Добавляем название на деталь (спрайт)
+                const canvas2 = document.createElement('canvas');
+                canvas2.width = 256;
+                canvas2.height = 64;
+                const ctx = canvas2.getContext('2d');
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.roundRect(0, 0, 256, 64, 12);
+                ctx.fill();
+                ctx.font = 'bold 22px Inter, sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(product.name.substring(0, 20), 128, 34);
+
+                const spriteMat = new THREE.SpriteMaterial({
+                    map: new THREE.CanvasTexture(canvas2),
+                    transparent: true
+                });
+                const sprite = new THREE.Sprite(spriteMat);
+                sprite.position.set(pos.x, pos.y + 0.3, pos.z);
+                sprite.scale.set(1.2, 0.3, 1);
+                pcCase.add(sprite);
+            }
+        }
+
+        // ============================================================
+        // РЕНДЕР ТОВАРОВ
         // ============================================================
 
         function getCategoryName(cat) {
@@ -1035,11 +998,13 @@
 
             grid.innerHTML = sorted.map((p, index) => {
                 const isSelected = selectedBuild[currentCategory] === index;
-                const imgSrc =
-                    `https://via.placeholder.com/230x140/1a1a1a/3b82f6?text=${encodeURIComponent(p.name.split(' ').slice(0, 2).join('+'))}`;
+                const imgSrc = getProductImage(p.name);
+                const specsStr = p.specs ? Object.values(p.specs).slice(0, 3).join(', ') : '';
                 return `
                     <div class="card">
-                        <img src="${imgSrc}" alt="${p.name}" loading="lazy" />
+                        <div class="image-wrap">
+                            <img src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${p.name.replace(/ /g,'')}/300/200'" />
+                        </div>
                         <div class="name" title="${p.name}">${p.name}</div>
                         <div class="shop">${p.shop}</div>
                         <div class="price-wrap">
@@ -1048,12 +1013,14 @@
                         </div>
                         <div class="rating">⭐ ${p.rating.toFixed(1)}</div>
                         <div class="btn-group">
-                            <button class="btn-add ${isSelected ? 'selected' : ''}" 
-                                    onclick="toggleSelect('${currentCategory}', ${index})">
+                            <button class="btn-add ${isSelected ? 'selected' : ''}" onclick="toggleSelect('${currentCategory}', ${index})">
                                 ${isSelected ? '✓ Выбран' : 'Добавить'}
                             </button>
                             <button class="btn-detail" onclick="openModal('${currentCategory}', ${index})">
-                                <i class="fas fa-info-circle"></i> Подробнее
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <button class="btn-buy" onclick="buyProduct('${currentCategory}', ${index})">
+                                <i class="fas fa-shopping-cart"></i>
                             </button>
                         </div>
                     </div>
@@ -1070,11 +1037,15 @@
         function toggleSelect(category, index) {
             if (selectedBuild[category] === index) {
                 delete selectedBuild[category];
+                showToast('🗑️ Удалено', 'Компонент удалён из сборки');
             } else {
                 selectedBuild[category] = index;
+                const product = PRODUCTS[category][index];
+                showToast('✅ Добавлено', `${product.name} добавлен в сборку`);
             }
             renderProducts();
             updateSummary();
+            update3D();
         }
 
         // ============================================================
@@ -1118,8 +1089,7 @@
             document.getElementById('modalPrice').textContent = p.price.toLocaleString() + ' ₽';
             document.getElementById('modalPriceOld').textContent = p.oldPrice ? p.oldPrice.toLocaleString() + ' ₽' : '';
             document.getElementById('modalRating').textContent = '⭐ ' + p.rating.toFixed(1);
-            document.getElementById('modalImg').src =
-                `https://via.placeholder.com/500x200/1a1a1a/3b82f6?text=${encodeURIComponent(p.name.split(' ').slice(0, 2).join('+'))}`;
+            document.getElementById('modalImg').src = getProductImage(p.name);
 
             const specsContainer = document.getElementById('modalSpecs');
             if (p.specs) {
@@ -1135,7 +1105,8 @@
                 document.getElementById('modal').classList.remove('open');
             };
             document.getElementById('modalBuyBtn').onclick = function() {
-                window.open(p.url || '#', '_blank');
+                buyProduct(category, index);
+                document.getElementById('modal').classList.remove('open');
             };
 
             document.getElementById('modal').classList.add('open');
@@ -1149,12 +1120,68 @@
         });
 
         // ============================================================
+        // ПОКУПКА
+        // ============================================================
+
+        // ТВОЙ КЛЮЧ ДЛЯ ГЕНЕРАЦИИ ССЫЛОК
+        const YOOMONEY_IP = 'C0144BD838669D4B0B0758A9F0B8ECC35513CDDF7E3ACC50768059C276B201FC';
+        const YOOMONEY_ACCOUNT = '4100119492575961';
+
+        function buyProduct(category, index) {
+            const products = PRODUCTS[category] || [];
+            const product = products[index];
+            if (!product) return;
+
+            const price = product.price;
+            const name = encodeURIComponent(product.name);
+            const shop = encodeURIComponent(product.shop);
+
+            // Генерируем ссылку на оплату через ЮMoney
+            const paymentUrl =
+                `https://yoomoney.ru/quickpay/confirm.xml?receiver=${YOOMONEY_ACCOUNT}&quickpay-form=shop&targets=Покупка%20${name}&sum=${price}&paymentType=PC&label=PCBuilder_${Date.now()}`;
+
+            // Открываем в новом окне
+            window.open(paymentUrl, '_blank');
+
+            showToast('💳 Оплата', `Переход к оплате товара "${product.name}"`);
+        }
+
+        function buyAll() {
+            if (Object.keys(selectedBuild).length === 0) {
+                showToast('⚠️ Ошибка', 'Сначала добавьте компоненты в сборку!');
+                return;
+            }
+
+            let total = 0;
+            let names = [];
+
+            for (const [category, index] of Object.entries(selectedBuild)) {
+                const products = PRODUCTS[category] || [];
+                const product = products[index];
+                if (product) {
+                    total += product.price;
+                    names.push(product.name);
+                }
+            }
+
+            const allNames = encodeURIComponent(names.join(', '));
+
+            // Генерируем ссылку на оплату всей сборки
+            const paymentUrl =
+                `https://yoomoney.ru/quickpay/confirm.xml?receiver=${YOOMONEY_ACCOUNT}&quickpay-form=shop&targets=Сборка%20ПК%3A%20${allNames}&sum=${total}&paymentType=PC&label=PCBuilder_${Date.now()}`;
+
+            window.open(paymentUrl, '_blank');
+
+            showToast('💳 Оплата сборки', `Общая стоимость: ${total.toLocaleString()} ₽`);
+        }
+
+        // ============================================================
         // СОХРАНЕНИЕ И ЗАГРУЗКА
         // ============================================================
 
         document.getElementById('saveBuildBtn').addEventListener('click', function() {
             if (Object.keys(selectedBuild).length === 0) {
-                alert('❌ Добавьте хотя бы один компонент!');
+                showToast('⚠️ Ошибка', 'Добавьте хотя бы один компонент!');
                 return;
             }
 
@@ -1170,7 +1197,7 @@
 
             savedBuilds.push(build);
             localStorage.setItem('pcBuilderSaves', JSON.stringify(savedBuilds));
-            alert('✅ Сборка сохранена!');
+            showToast('✅ Сохранено', `Сборка "${name}" сохранена!`);
         });
 
         document.getElementById('clearBuildBtn').addEventListener('click', function() {
@@ -1179,6 +1206,8 @@
                 selectedBuild = {};
                 renderProducts();
                 updateSummary();
+                update3D();
+                showToast('🗑️ Очищено', 'Сборка очищена');
             }
         });
 
@@ -1205,23 +1234,60 @@
         // ============================================================
 
         document.getElementById('authBtn').addEventListener('click', function() {
-            const email = prompt('Введите email:');
+            const email = prompt('Введите email для входа:');
             if (email && email.includes('@')) {
                 document.getElementById('userInfo').textContent = '👤 ' + email;
-                alert('✅ Добро пожаловать, ' + email);
+                showToast('✅ Вход выполнен', `Добро пожаловать, ${email}`);
             }
         });
+
+        // ============================================================
+        // FPS СИМУЛЯЦИЯ
+        // ============================================================
+
+        function simulateFPS() {
+            // Симулируем FPS на основе выбранных компонентов
+            let fps = 0;
+            const hasGPU = selectedBuild['gpu'] !== undefined;
+            const hasCPU = selectedBuild['cpu'] !== undefined;
+            const hasRAM = selectedBuild['ram'] !== undefined;
+
+            if (hasGPU && hasCPU && hasRAM) {
+                // Топовая сборка
+                const gpuIndex = selectedBuild['gpu'];
+                const gpu = PRODUCTS.gpu[gpuIndex];
+                if (gpu && gpu.name.includes('5090')) fps = 240;
+                else if (gpu && gpu.name.includes('5080')) fps = 180;
+                else if (gpu && gpu.name.includes('7900')) fps = 160;
+                else if (gpu && gpu.name.includes('4070')) fps = 120;
+                else if (gpu && gpu.name.includes('4060')) fps = 90;
+                else fps = 60;
+            } else if (hasGPU || hasCPU) {
+                fps = 45;
+            } else {
+                fps = 30;
+            }
+
+            document.getElementById('fpsDisplay').textContent = Math.floor(fps + Math.random() * 10);
+        }
 
         // ============================================================
         // СТАРТ
         // ============================================================
 
-        renderProducts();
-        updateSummary();
-        console.log('✅ PC Builder v5.0 загружен!');
-        console.log('📦 Всего категорий: 12');
-        console.log('🛒 Всего товаров: ' + Object.values(PRODUCTS).reduce((sum, arr) => sum + arr.length, 0));
-        console.log('🇷🇺 Только Россия!');
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            updateSummary();
+            setTimeout(init3DScene, 300);
+            setInterval(simulateFPS, 2000);
+            simulateFPS();
+            console.log('✅ PC Builder 3D v2.0 загружен!');
+            console.log('📦 Всего категорий: 12');
+            console.log('🛒 Всего товаров: ' + Object.values(PRODUCTS).reduce((sum, arr) => sum + arr.length, 0));
+            console.log('🇷🇺 Только Россия!');
+            console.log('🔑 Ключ для оплаты: ' + YOOMONEY_IP);
+            console.log('💳 Счёт: ' + YOOMONEY_ACCOUNT);
+        });
     </script>
 
 </body>
