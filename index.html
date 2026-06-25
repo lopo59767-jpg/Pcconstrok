@@ -666,39 +666,53 @@
 
     <script>
         // ============================================================
-        // РЕАЛЬНЫЕ ФОТО
+        // РЕАЛЬНЫЕ ФОТО (можно добавлять свои ссылки)
         // ============================================================
 
         const REAL_IMAGES = {
+            // Процессоры
             'AMD Ryzen 9 9950X3D': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_9_9950x3d.jpg',
             'AMD Ryzen 7 9800X3D': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_7_9800x3d.jpg',
             'Intel Core i9-14900K': 'https://ir.ozon.ru/multimedia/c1000/1000000000/intel_core_i9_14900k.jpg',
             'AMD Ryzen 7 7700X': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_7_7700x.jpg',
             'AMD Ryzen 5 7600X': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_ryzen_5_7600x.jpg',
+            // Видеокарты
             'NVIDIA RTX 5090 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_5090.jpg',
             'NVIDIA RTX 5080 16GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_5080.jpg',
             'AMD Radeon RX 7900 XTX': 'https://ir.ozon.ru/multimedia/c1000/1000000000/amd_radeon_rx_7900_xtx.jpg',
             'NVIDIA RTX 4070 Ti SUPER': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nvidia_rtx_4070_ti_super.jpg',
+            // RAM
             'Corsair Vengeance 32GB DDR5-6000': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_vengeance_32gb.jpg',
             'G.Skill Trident Z5 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/gskill_trident_z5.jpg',
             'Kingston Fury Beast 32GB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/kingston_fury_beast.jpg',
+            // Материнские платы
             'ASUS ROG STRIX B850-F': 'https://ir.ozon.ru/multimedia/c1000/1000000000/asus_rog_strix_b850f.jpg',
             'MSI MAG B650 TOMAHAWK': 'https://ir.ozon.ru/multimedia/c1000/1000000000/msi_mag_b650_tomahawk.jpg',
             'Gigabyte B650 AORUS ELITE': 'https://ir.ozon.ru/multimedia/c1000/1000000000/gigabyte_b650_aorus.jpg',
+            // Охлаждение
             'Noctua NH-D15': 'https://ir.ozon.ru/multimedia/c1000/1000000000/noctua_nh_d15.jpg',
             'Arctic Liquid Freezer III 360': 'https://ir.ozon.ru/multimedia/c1000/1000000000/arctic_liquid_freezer_360.jpg',
+            // Накопители
             'Samsung 990 PRO 2TB NVMe': 'https://ir.ozon.ru/multimedia/c1000/1000000000/samsung_990_pro.jpg',
             'WD Black SN850X 2TB': 'https://ir.ozon.ru/multimedia/c1000/1000000000/wd_black_sn850x.jpg',
+            // Блоки питания
             'Corsair RM1000e 1000W': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_rm1000e.jpg',
             'Seasonic Focus GX-850': 'https://ir.ozon.ru/multimedia/c1000/1000000000/seasonic_focus_gx850.jpg',
+            // Корпуса
             'NZXT H7 Flow': 'https://ir.ozon.ru/multimedia/c1000/1000000000/nzxt_h7_flow.jpg',
             'Lian Li O11 Dynamic EVO': 'https://ir.ozon.ru/multimedia/c1000/1000000000/lianli_o11_dynamic.jpg',
-            'Samsung Odyssey G9 49"': 'https://ir.ozon.ru/multimedia/c1000/1000000000/samsung_odyssey_g9.jpg',
-            'LG UltraGear 27" 240Hz': 'https://ir.ozon.ru/multimedia/c1000/1000000000/lg_ultragear_27.jpg',
+            'Corsair 4000D Airflow': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_4000d.jpg',
+            'DeepCool MATREXX 55': 'https://ir.ozon.ru/multimedia/c1000/1000000000/deepcool_matreyy_55.jpg',
+            'Zalman S2': 'https://ir.ozon.ru/multimedia/c1000/1000000000/zalman_s2.jpg',
+            'MUSON Корпус 1': 'https://pix-up.ru/uploads/img_6a3d12536587a5.09701422_1782387283.jpg',
+            'Jonsbo MOD3': 'https://ir.ozon.ru/multimedia/c1000/1000000000/jonsbo_mod3.jpg',
+            // Клавиатуры
             'Razer Huntsman V3 Pro': 'https://ir.ozon.ru/multimedia/c1000/1000000000/razer_huntsman_v3.jpg',
             'Corsair K70 RGB PRO': 'https://ir.ozon.ru/multimedia/c1000/1000000000/corsair_k70.jpg',
+            // Мыши
             'Logitech PRO X Superlight': 'https://ir.ozon.ru/multimedia/c1000/1000000000/logitech_pro_x.jpg',
             'Razer Basilisk V3 Pro': 'https://ir.ozon.ru/multimedia/c1000/1000000000/razer_basilisk_v3.jpg',
+            // Колонки
             'Logitech Z906 5.1': 'https://ir.ozon.ru/multimedia/c1000/1000000000/logitech_z906.jpg',
             'Edifier R1280T': 'https://ir.ozon.ru/multimedia/c1000/1000000000/edifier_r1280t.jpg',
         };
@@ -710,353 +724,147 @@
         }
 
         // ============================================================
-        // ТОВАРЫ — ПОЛНАЯ БАЗА
+        // ПОЛНАЯ БАЗА ТОВАРОВ
         // ============================================================
 
         const PRODUCTS = {
             cpu: [
-                // Супер-бюджетные (офис)
-                { name: 'Intel Celeron G5900', price: 2990, oldPrice: 4990, shop: 'DNS', rating: 4.0,
-                specs: { Ядра: '2', 'Частота': '3.4 ГГц', Сокет: 'LGA 1200' } },
-                { name: 'Intel Celeron G6900', price: 3490, oldPrice: 5490, shop: 'DNS', rating: 4.1,
-                specs: { Ядра: '2', 'Частота': '3.4 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Pentium G6400', price: 3990, oldPrice: 5990, shop: 'Ozon', rating: 4.2,
-                    specs: { Ядра: '2/4', 'Частота': '4.0 ГГц', Сокет: 'LGA 1200' } },
-                { name: 'Intel Pentium G7400', price: 4490, oldPrice: 6490, shop: 'Wildberries', rating: 4.2,
-                    specs: { Ядра: '2/4', 'Частота': '3.7 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i3-12100', price: 7990, oldPrice: 9990, shop: 'Ozon', rating: 4.5,
-                    specs: { Ядра: '4/8', 'Частота': '3.3 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i3-13100', price: 8990, oldPrice: 10990, shop: 'DNS', rating: 4.5,
-                    specs: { Ядра: '4/8', 'Частота': '3.4 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i3-14100', price: 9990, oldPrice: 11990, shop: 'Wildberries', rating: 4.6,
-                    specs: { Ядра: '4/8', 'Частота': '3.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'AMD Athlon 200GE', price: 3490, oldPrice: 5490, shop: 'Ozon', rating: 4.1,
-                    specs: { Ядра: '2/4', 'Частота': '3.2 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Athlon 3000G', price: 3990, oldPrice: 5990, shop: 'DNS', rating: 4.2,
-                    specs: { Ядра: '2/4', 'Частота': '3.5 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 3 1200', price: 4490, oldPrice: 6490, shop: 'Ozon', rating: 4.3,
-                specs: { Ядра: '4', 'Частота': '3.1 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 3 3100', price: 5990, oldPrice: 7990, shop: 'Ozon', rating: 4.4,
-                    specs: { Ядра: '4/8', 'Частота': '3.6 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 3 4100', price: 6990, oldPrice: 8990, shop: 'Wildberries', rating: 4.5,
-                    specs: { Ядра: '4/8', 'Частота': '3.8 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 5 5600G', price: 11990, oldPrice: 13990, shop: 'DNS', rating: 4.7,
-                    specs: { Ядра: '6/12', 'Частота': '3.9 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 5 5500', price: 10990, oldPrice: 12990, shop: 'Ozon', rating: 4.6,
-                    specs: { Ядра: '6/12', 'Частота': '3.6 ГГц', Сокет: 'AM4' } },
-                // Средний сегмент
-                { name: 'Intel Core i5-10400', price: 8990, oldPrice: 10990, shop: 'Ozon', rating: 4.6,
-                    specs: { Ядра: '6/12', 'Частота': '2.9 ГГц', Сокет: 'LGA 1200' } },
-                { name: 'Intel Core i5-11400', price: 9990, oldPrice: 11990, shop: 'Ozon', rating: 4.6,
-                    specs: { Ядра: '6/12', 'Частота': '2.6 ГГц', Сокет: 'LGA 1200' } },
-                { name: 'Intel Core i5-12400', price: 11990, oldPrice: 13990, shop: 'DNS', rating: 4.7,
-                    specs: { Ядра: '6/12', 'Частота': '2.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i5-12400F', price: 11490, oldPrice: 13490, shop: 'Ozon', rating: 4.6,
-                    specs: { Ядра: '6/12', 'Частота': '2.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i5-12600K', price: 15990, oldPrice: 17990, shop: 'Ozon', rating: 4.8,
-                    specs: { Ядра: '10 (6P+4E)', 'Частота': '3.7 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i5-13400', price: 14990, oldPrice: 16990, shop: 'Wildberries', rating: 4.7,
-                    specs: { Ядра: '10 (6P+4E)', 'Частота': '2.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i5-13600K', price: 20990, oldPrice: 22990, shop: 'DNS', rating: 4.9,
-                    specs: { Ядра: '14 (6P+8E)', 'Частота': '3.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i5-14600K', price: 21990, oldPrice: 23990, shop: 'Wildberries', rating: 4.9,
-                    specs: { Ядра: '14 (6P+8E)', 'Частота': '3.5 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'AMD Ryzen 5 3600', price: 9990, oldPrice: 11990, shop: 'Ozon', rating: 4.7,
-                    specs: { Ядра: '6/12', 'Частота': '3.6 ГГц', Сокет: 'AM4' } },
+                { name: 'AMD Ryzen 9 9950X3D', price: 89990, oldPrice: 99990, shop: 'Ozon', rating: 4.9,
+                    specs: { Производитель: 'AMD', Ядра: '16', Потоки: '32', 'Частота': '4.3 ГГц', Сокет: 'AM5',
+                    TDP: '170W' } },
+                { name: 'AMD Ryzen 7 9800X3D', price: 45990, oldPrice: 52990, shop: 'Wildberries', rating: 4.8,
+                    specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.7 ГГц', Сокет: 'AM5',
+                    TDP: '120W' } },
+                { name: 'Intel Core i9-14900K', price: 52990, oldPrice: 58990, shop: 'DNS', rating: 4.7,
+                    specs: { Производитель: 'Intel', Ядра: '24', Потоки: '32', 'Частота': '3.2 ГГц', Сокет: 'LGA1700',
+                        TDP: '253W' } },
+                { name: 'AMD Ryzen 7 7700X', price: 27990, oldPrice: 32990, shop: 'Citilink', rating: 4.6,
+                    specs: { Производитель: 'AMD', Ядра: '8', Потоки: '16', 'Частота': '4.5 ГГц', Сокет: 'AM5',
+                    TDP: '105W' } },
+                { name: 'AMD Ryzen 5 7600X', price: 21990, oldPrice: 25990, shop: 'MVideo', rating: 4.5,
+                    specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '4.7 ГГц', Сокет: 'AM5',
+                    TDP: '105W' } },
+                { name: 'Intel Core i5-14600K', price: 32990, oldPrice: 35990, shop: 'Ozon', rating: 4.5,
+                    specs: { Производитель: 'Intel', Ядра: '14', Потоки: '20', 'Частота': '3.5 ГГц', Сокет: 'LGA1700',
+                        TDP: '181W' } },
                 { name: 'AMD Ryzen 5 5600X', price: 14990, oldPrice: 18990, shop: 'DNS', rating: 4.4,
-                    specs: { Ядра: '6', 'Потоки': '12', 'Частота': '3.7 ГГц', Сокет: 'AM4', TDP: '65W' } },
-                { name: 'AMD Ryzen 7 5700X', price: 15990, oldPrice: 17990, shop: 'Ozon', rating: 4.7,
-                    specs: { Ядра: '8/16', 'Частота': '3.4 ГГц', Сокет: 'AM4' } },
-                { name: 'AMD Ryzen 7 5800X', price: 17990, oldPrice: 19990, shop: 'Wildberries', rating: 4.8,
-                    specs: { Ядра: '8/16', 'Частота': '3.8 ГГц', Сокет: 'AM4' } },
-                // Топовый сегмент
-                { name: 'Intel Core i7-12700K', price: 19990, oldPrice: 21990, shop: 'DNS', rating: 4.9,
-                    specs: { Ядра: '12 (8P+4E)', 'Частота': '3.6 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i7-13700K', price: 22990, oldPrice: 24990, shop: 'Wildberries', rating: 4.9,
-                    specs: { Ядра: '16 (8P+8E)', 'Частота': '3.4 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i7-14700K', price: 24990, oldPrice: 26990, shop: 'Ozon', rating: 4.9,
-                    specs: { Ядра: '20 (8P+12E)', 'Частота': '3.4 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'Intel Core i9-14900K', price: 31990, oldPrice: 33990, shop: 'Wildberries', rating: 4.9,
-                    specs: { Ядра: '24 (8P+16E)', 'Частота': '3.2 ГГц', Сокет: 'LGA 1700' } },
-                { name: 'AMD Ryzen 7 7700X', price: 24990, oldPrice: 26990, shop: 'Wildberries', rating: 4.8,
-                    specs: { Ядра: '8/16', 'Частота': '4.5 ГГц', Сокет: 'AM5' } },
-                { name: 'AMD Ryzen 7 7800X3D', price: 32990, oldPrice: 34990, shop: 'DNS', rating: 4.9,
-                    specs: { Ядра: '8/16', 'Частота': '4.0 ГГц', Сокет: 'AM5', 'Особенность': '3D V-Cache' } },
-                { name: 'AMD Ryzen 9 7900X', price: 34990, oldPrice: 36990, shop: 'Wildberries', rating: 4.9,
-                    specs: { Ядра: '12/24', 'Частота': '4.7 ГГц', Сокет: 'AM5' } },
-                { name: 'AMD Ryzen 9 7950X', price: 42990, oldPrice: 44990, shop: 'DNS', rating: 4.9,
-                    specs: { Ядра: '16/32', 'Частота': '4.5 ГГц', Сокет: 'AM5' } },
-                { name: 'AMD Ryzen 9 7950X3D', price: 49990, oldPrice: 51990, shop: 'Ozon', rating: 4.9,
-                    specs: { Ядра: '16/32', 'Частота': '4.0 ГГц', Сокет: 'AM5', 'Особенность': '3D V-Cache' } },
-                // AMD Ryzen 9000
-                { name: 'AMD Ryzen 5 9600X', price: 22990, oldPrice: 24990, shop: 'Wildberries', rating: 4.8,
-                    specs: { Ядра: '6/12', 'Частота': '4.7 ГГц', Сокет: 'AM5', 'Поколение': 'Zen 5' } },
-                { name: 'AMD Ryzen 7 9700X', price: 27990, oldPrice: 29990, shop: 'DNS', rating: 4.8,
-                    specs: { Ядра: '8/16', 'Частота': '4.5 ГГц', Сокет: 'AM5', 'Поколение': 'Zen 5' } },
-                { name: 'AMD Ryzen 9 9900X', price: 39990, oldPrice: 41990, shop: 'Ozon', rating: 4.9,
-                    specs: { Ядра: '12/24', 'Частота': '4.7 ГГц', Сокет: 'AM5', 'Поколение': 'Zen 5' } },
-                { name: 'AMD Ryzen 9 9950X', price: 47990, oldPrice: 49990, shop: 'Wildberries', rating: 4.9,
-                    specs: { Ядра: '16/32', 'Частота': '4.5 ГГц', Сокет: 'AM5', 'Поколение': 'Zen 5' } },
-                { name: 'AMD Ryzen 9 9950X3D', price: 54990, oldPrice: 56990, shop: 'DNS', rating: 4.9,
-                    specs: { Ядра: '16/32', 'Частота': '4.0 ГГц', Сокет: 'AM5', 'Поколение': 'Zen 5',
-                    'Особенность': '3D V-Cache' } },
+                    specs: { Производитель: 'AMD', Ядра: '6', Потоки: '12', 'Частота': '3.7 ГГц', Сокет: 'AM4',
+                    TDP: '65W' } },
+                { name: 'Intel Core i7-14700K', price: 41990, oldPrice: 46990, shop: 'Wildberries', rating: 4.6,
+                    specs: { Производитель: 'Intel', Ядра: '20', Потоки: '28', 'Частота': '3.4 ГГц', Сокет: 'LGA1700',
+                        TDP: '253W' } },
             ],
             gpu: [
-                // Бюджетные
-                { name: 'AFOX GTX 1050 Ti 4GB', price: 8990, oldPrice: 11990, shop: 'DNS', rating: 4.2,
-                    specs: { Производитель: 'AFOX', 'Видеопамять': '4GB GDDR5', TDP: '75W' } },
-                { name: 'AFOX GTX 1660 Ti 6GB', price: 15990, oldPrice: 19990, shop: 'DNS', rating: 4.4,
-                    specs: { Производитель: 'AFOX', 'Видеопамять': '6GB GDDR6', TDP: '120W' } },
-                { name: 'AFOX RTX 2060 6GB', price: 18990, oldPrice: 22990, shop: 'DNS', rating: 4.5,
-                    specs: { Производитель: 'AFOX', 'Видеопамять': '6GB GDDR6', TDP: '160W' } },
-                { name: 'AFOX RTX 3060 12GB', price: 24990, oldPrice: 29990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'AFOX', 'Видеопамять': '12GB GDDR6', TDP: '170W' } },
-                { name: 'ASUS RTX 3050 6GB Dual OC', price: 19990, oldPrice: 24990, shop: 'Ozon', rating: 4.5,
-                    specs: { Производитель: 'ASUS', 'Видеопамять': '6GB GDDR6', TDP: '70W' } },
-                { name: 'Gigabyte RTX 3050 6GB', price: 18990, oldPrice: 23990, shop: 'Ozon', rating: 4.4,
-                    specs: { Производитель: 'Gigabyte', 'Видеопамять': '6GB GDDR6', TDP: '70W' } },
-                { name: 'Palit RTX 3060 Dual 12G', price: 26990, oldPrice: 31990, shop: 'Ozon', rating: 4.6,
-                    specs: { Производитель: 'Palit', 'Видеопамять': '12GB GDDR6', TDP: '170W' } },
-                // RTX 5050/5060
-                { name: 'MSI RTX 5050 Ventus 2X OC 8GB', price: 34990, oldPrice: 39990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '8GB GDDR7', TDP: '130W' } },
-                { name: 'MSI RTX 5060 VENTUS 3X OC 8GB', price: 42990, oldPrice: 48990, shop: 'Ozon', rating: 4.7,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '8GB GDDR7', TDP: '150W' } },
-                // RTX 4060 Ti
-                { name: 'MSI RTX 4060 Ti VENTUS 2X Black 8G', price: 44990, oldPrice: 52990, shop: 'Ozon', rating: 4.7,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '8GB GDDR6', TDP: '160W' } },
-                { name: 'Palit RTX 4060 Ti Dual 8G', price: 42990, oldPrice: 49990, shop: 'Ozon', rating: 4.6,
-                    specs: { Производитель: 'Palit', 'Видеопамять': '8GB GDDR6', TDP: '160W' } },
-                { name: 'Palit RTX 4060 Ti JetStream 16GB', price: 54990, oldPrice: 62990, shop: 'Ozon', rating: 4.8,
-                    specs: { Производитель: 'Palit', 'Видеопамять': '16GB GDDR6', TDP: '165W' } },
-                // RTX 4070
-                { name: 'MSI RTX 4070 SUPER 12G VENTUS 3X OC', price: 69990, oldPrice: 84990, shop: 'Ozon', rating: 4.8,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '12GB GDDR6X', TDP: '220W' } },
-                { name: 'Palit RTX 4070 Super Dual OC', price: 67990, oldPrice: 82990, shop: 'MVideo', rating: 4.8,
-                    specs: { Производитель: 'Palit', 'Видеопамять': '12GB GDDR6X', TDP: '220W' } },
-                { name: 'MSI RTX 4070 Ti Super Ventus 3X OC', price: 89990, oldPrice: 109990, shop: 'Ozon', rating: 4.9,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '16GB GDDR6X', TDP: '285W' } },
-                // RTX 5070/5080/5090
-                { name: 'Palit RTX 5070 GamingPro 12GB', price: 99990, oldPrice: 119990, shop: 'Ozon', rating: 4.8,
-                    specs: { Производитель: 'Palit', 'Видеопамять': '12GB GDDR7', TDP: '250W' } },
-                { name: 'MSI RTX 5080 Ventus 3X OC Plus 16GB', price: 219990, oldPrice: 259990, shop: 'Ozon', rating: 4.9,
-                    specs: { Производитель: 'MSI', 'Видеопамять': '16GB GDDR7', TDP: '360W' } },
                 { name: 'NVIDIA RTX 5090 32GB', price: 432990, oldPrice: 499990, shop: 'Ozon', rating: 4.9,
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '32GB GDDR7', TDP: '600W' } },
-                // AMD Radeon
-                { name: 'AMD Radeon RX 6600', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.6,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', TDP: '100W' } },
-                { name: 'AMD Radeon RX 6600 XT', price: 31990, oldPrice: 37990, shop: 'DNS', rating: 4.7,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', TDP: '160W' } },
-                { name: 'AMD Radeon RX 6650 XT', price: 34990, oldPrice: 40990, shop: 'Ozon', rating: 4.7,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', TDP: '176W' } },
-                { name: 'AMD Radeon RX 7600 XT', price: 35990, oldPrice: 42990, shop: 'Wildberries', rating: 4.3,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', TDP: '190W' } },
-                { name: 'AMD Radeon RX 7800 XT', price: 65990, oldPrice: 79990, shop: 'MVideo', rating: 4.5,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '16GB GDDR6', TDP: '263W' } },
+                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '32GB GDDR7', 'Шина': '512-bit', TDP: '600W' } },
+                { name: 'NVIDIA RTX 5080 16GB', price: 219990, oldPrice: 259990, shop: 'Wildberries', rating: 4.8,
+                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR7', 'Шина': '256-bit', TDP: '360W' } },
                 { name: 'AMD Radeon RX 7900 XTX', price: 149990, oldPrice: 179990, shop: 'DNS', rating: 4.7,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '24GB GDDR6', TDP: '420W' } },
-                // Intel Arc
-                { name: 'Asrock Intel Arc A380 6GB', price: 11990, oldPrice: 14990, shop: 'ChipDip', rating: 4.4,
-                    specs: { Производитель: 'Asrock', 'Видеопамять': '6GB GDDR6', TDP: '75W' } },
-                // Б/у легенды
-                { name: 'NVIDIA GTX 1060 3GB', price: 9990, oldPrice: 12990, shop: 'Ozon', rating: 4.4,
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '3GB GDDR5', TDP: '120W' } },
-                { name: 'NVIDIA GTX 1650 Super', price: 13990, oldPrice: 17990, shop: 'DNS', rating: 4.5,
-                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '4GB GDDR6', TDP: '100W' } },
-                { name: 'AMD Radeon RX 580 8GB', price: 14990, oldPrice: 18990, shop: 'Ozon', rating: 4.6,
-                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR5', TDP: '185W' } },
+                    specs: { Производитель: 'AMD', 'Видеопамять': '24GB GDDR6', 'Шина': '384-bit', TDP: '420W' } },
+                { name: 'NVIDIA RTX 4070 Ti SUPER', price: 89990, oldPrice: 109990, shop: 'Citilink', rating: 4.6,
+                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '16GB GDDR6X', 'Шина': '256-bit', TDP: '285W' } },
+                { name: 'AMD Radeon RX 7800 XT', price: 65990, oldPrice: 79990, shop: 'MVideo', rating: 4.5,
+                    specs: { Производитель: 'AMD', 'Видеопамять': '16GB GDDR6', 'Шина': '256-bit', TDP: '263W' } },
+                { name: 'NVIDIA RTX 4060 Ti 8GB', price: 44990, oldPrice: 52990, shop: 'Ozon', rating: 4.4,
+                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '160W' } },
+                { name: 'AMD Radeon RX 7600 XT', price: 35990, oldPrice: 42990, shop: 'Wildberries', rating: 4.3,
+                    specs: { Производитель: 'AMD', 'Видеопамять': '8GB GDDR6', 'Шина': '128-bit', TDP: '190W' } },
+                { name: 'NVIDIA RTX 3050 6GB', price: 22990, oldPrice: 27990, shop: 'DNS', rating: 4.2,
+                    specs: { Производитель: 'NVIDIA', 'Видеопамять': '6GB GDDR6', 'Шина': '96-bit', TDP: '70W' } },
             ],
             ram: [
-                // DDR4 бюджетные
-                { name: 'Patriot 8GB DDR4 3200 MHz', price: 8230, oldPrice: 10490, shop: 'Softline', rating: 4.4,
-                    specs: { Производитель: 'Patriot', Объём: '8GB', Тип: 'DDR4', Частота: '3200MHz' } },
-                { name: 'Patriot 16GB DDR4 3200 MHz', price: 13207, oldPrice: 15990, shop: 'Softline', rating: 4.5,
-                    specs: { Производитель: 'Patriot', Объём: '16GB', Тип: 'DDR4', Частота: '3200MHz' } },
-                { name: 'Patriot 2×8GB DDR4 3200 MHz', price: 17932, oldPrice: 20990, shop: 'Softline', rating: 4.5,
-                    specs: { Производитель: 'Patriot', Объём: '16GB (2x8GB)', Тип: 'DDR4', Частота: '3200MHz' } },
-                { name: 'Patriot 2×8GB DDR4 3600 MHz', price: 16919, oldPrice: 19990, shop: 'Softline', rating: 4.6,
-                    specs: { Производитель: 'Patriot', Объём: '16GB (2x8GB)', Тип: 'DDR4', Частота: '3600MHz' } },
-                { name: 'Patriot 2×16GB DDR4 3200 MHz', price: 32273, oldPrice: 35990, shop: 'Softline', rating: 4.5,
-                    specs: { Производитель: 'Patriot', Объём: '32GB (2x16GB)', Тип: 'DDR4', Частота: '3200MHz' } },
-                // DDR5
-                { name: 'Patriot 8GB DDR5 5600 MHz', price: 11851, oldPrice: 14990, shop: 'Softline', rating: 4.5,
-                    specs: { Производитель: 'Patriot', Объём: '8GB', Тип: 'DDR5', Частота: '5600MHz' } },
-                { name: 'Patriot 16GB DDR5 5600 MHz', price: 20437, oldPrice: 24990, shop: 'Softline', rating: 4.6,
-                    specs: { Производитель: 'Patriot', Объём: '16GB', Тип: 'DDR5', Частота: '5600MHz' } },
-                { name: 'Patriot 2×16GB DDR5 6000 MHz', price: 49663, oldPrice: 54990, shop: 'Softline', rating: 4.7,
-                    specs: { Производитель: 'Patriot', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz' } },
-                { name: 'Patriot 2×16GB DDR5 6400 MHz', price: 46773, oldPrice: 52990, shop: 'Softline', rating: 4.7,
-                    specs: { Производитель: 'Patriot', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6400MHz' } },
-                { name: 'Patriot 2×16GB DDR5 8000 MHz', price: 90863, oldPrice: 99990, shop: 'Softline', rating: 4.9,
-                    specs: { Производитель: 'Patriot', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '8000MHz' } },
-                // Corsair
                 { name: 'Corsair Vengeance 32GB DDR5-6000', price: 19990, oldPrice: 23990, shop: 'Ozon', rating: 4.7,
                     specs: { Производитель: 'Corsair', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz' } },
-                { name: 'Corsair Dominator 64GB DDR5-6400', price: 39990, oldPrice: 45990, shop: 'MVideo', rating: 4.8,
-                    specs: { Производитель: 'Corsair', Объём: '64GB (2x32GB)', Тип: 'DDR5', Частота: '6400MHz' } },
-                // G.Skill
-                { name: 'G.Skill Trident Z5 32GB DDR5-6400', price: 22990, oldPrice: 26990, shop: 'Wildberries', rating: 4.7,
+                { name: 'G.Skill Trident Z5 32GB', price: 22990, oldPrice: 26990, shop: 'Wildberries', rating: 4.6,
                     specs: { Производитель: 'G.Skill', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6400MHz' } },
-                // Kingston
-                { name: 'Kingston Fury Beast 32GB DDR5-6000', price: 17990, oldPrice: 20990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'Kingston', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '6000MHz' } },
-                { name: 'Kingston Fury 16GB DDR4-3200', price: 5990, oldPrice: 7990, shop: 'DNS', rating: 4.4,
-                    specs: { Производитель: 'Kingston', Объём: '16GB (2x8GB)', Тип: 'DDR4', Частота: '3200MHz' } },
+                { name: 'Kingston Fury Beast 32GB', price: 17990, oldPrice: 20990, shop: 'DNS', rating: 4.5,
+                    specs: { Производитель: 'Kingston', Объём: '32GB (2x16GB)', Тип: 'DDR5', Частота: '5600MHz' } },
+                { name: 'Patriot Viper 16GB DDR5', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.3,
+                    specs: { Производитель: 'Patriot', Объём: '16GB (2x8GB)', Тип: 'DDR5', Частота: '5600MHz' } },
             ],
             motherboard: [
-                // AM5
-                { name: 'ASUS ROG CROSSHAIR X870E HERO', price: 90000, oldPrice: 99990, shop: 'ASUS', rating: 4.9,
-                    specs: { Сокет: 'AM5', Чипсет: 'X870E', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS ROG STRIX B850-F GAMING WIFI', price: 28000, oldPrice: 32990, shop: 'ASUS', rating: 4.7,
-                    specs: { Сокет: 'AM5', Чипсет: 'B850', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS TUF GAMING B850-PLUS WIFI', price: 22000, oldPrice: 25990, shop: 'ASUS', rating: 4.6,
-                    specs: { Сокет: 'AM5', Чипсет: 'B850', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS PRIME B650-PLUS', price: 14000, oldPrice: 16990, shop: 'ASUS', rating: 4.5,
-                    specs: { Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
-                // LGA 1700
-                { name: 'ASUS ROG MAXIMUS Z790 HERO', price: 80000, oldPrice: 89990, shop: 'ASUS', rating: 4.9,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS ROG STRIX Z790-E GAMING WIFI', price: 45000, oldPrice: 49990, shop: 'ASUS', rating: 4.8,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS TUF GAMING Z790-PLUS WIFI', price: 30000, oldPrice: 34990, shop: 'ASUS', rating: 4.7,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
-                { name: 'ASUS PRIME Z790-P WIFI', price: 25000, oldPrice: 29990, shop: 'ASUS', rating: 4.6,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
-                // AM4
-                { name: 'ASUS ROG STRIX B550-F GAMING', price: 18000, oldPrice: 21990, shop: 'ASUS', rating: 4.6,
-                    specs: { Сокет: 'AM4', Чипсет: 'B550', 'Поддержка RAM': 'DDR4' } },
-                { name: 'ASUS TUF GAMING B550-PLUS', price: 15000, oldPrice: 17990, shop: 'ASUS', rating: 4.5,
-                    specs: { Сокет: 'AM4', Чипсет: 'B550', 'Поддержка RAM': 'DDR4' } },
-                // MSI
-                { name: 'MSI MEG Z790 GODLIKE', price: 100000, oldPrice: 109990, shop: 'MSI', rating: 4.9,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
+                { name: 'ASUS ROG STRIX B850-F', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.7,
+                    specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B850', 'Поддержка RAM': 'DDR5' } },
                 { name: 'MSI MAG B650 TOMAHAWK', price: 18990, oldPrice: 21990, shop: 'Wildberries', rating: 4.6,
-                    specs: { Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
-                // Gigabyte
+                    specs: { Производитель: 'MSI', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
                 { name: 'Gigabyte B650 AORUS ELITE', price: 16990, oldPrice: 19990, shop: 'DNS', rating: 4.5,
-                    specs: { Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
-                { name: 'Gigabyte Z790 AORUS ELITE AX', price: 35000, oldPrice: 39990, shop: 'Gigabyte', rating: 4.7,
-                    specs: { Сокет: 'LGA 1700', Чипсет: 'Z790', 'Поддержка RAM': 'DDR5' } },
+                    specs: { Производитель: 'Gigabyte', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
+                { name: 'ASUS TUF GAMING B650-PLUS', price: 15990, oldPrice: 18990, shop: 'Citilink', rating: 4.4,
+                    specs: { Производитель: 'ASUS', Сокет: 'AM5', Чипсет: 'B650', 'Поддержка RAM': 'DDR5' } },
             ],
             cooler: [
-                // Бюджетные кулеры
-                { name: 'PCCooler Paladin EX400S', price: 1900, oldPrice: 2490, shop: 'PCCooler', rating: 4.5,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '4', Размер: '120mm', TDP: '180W' } },
-                { name: 'ID-Cooling SE-224-XTS', price: 2500, oldPrice: 2990, shop: 'ID-Cooling', rating: 4.6,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '4', Размер: '120mm', TDP: '220W' } },
-                // Мощные башенные
-                { name: 'Deepcool AS500 PLUS', price: 6000, oldPrice: 6990, shop: 'DeepCool', rating: 4.7,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '5', Размер: '2x140mm', TDP: '220W' } },
-                { name: 'Thermalright Peerless Assassin 120', price: 5500, oldPrice: 6490, shop: 'Thermalright', rating: 4.8,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '6', Размер: '2x120mm', TDP: '260W' } },
-                { name: 'DeepCool AK620', price: 5990, oldPrice: 6990, shop: 'DeepCool', rating: 4.8,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '6', Размер: '2x120mm', TDP: '260W' } },
                 { name: 'Noctua NH-D15', price: 14990, oldPrice: 17990, shop: 'Ozon', rating: 4.9,
                     specs: { Производитель: 'Noctua', Тип: 'Воздушное', Размер: '140mm', TDP: '220W' } },
-                { name: 'be quiet! Dark Rock Pro 5', price: 9990, oldPrice: 11990, shop: 'be quiet!', rating: 4.9,
-                    specs: { Тип: 'Кулер', 'Количество трубок': '7', Размер: '2x140mm', TDP: '250W' } },
-                // СЖО 240mm
-                { name: 'Arctic Liquid Freezer III 240', price: 6900, oldPrice: 7990, shop: 'Arctic', rating: 4.8,
-                    specs: { Тип: 'СЖО', Размер: '240mm', TDP: '300W' } },
-                { name: 'DeepCool INFINITY LM240', price: 6241, oldPrice: 6990, shop: 'DeepCool', rating: 4.7,
-                    specs: { Тип: 'СЖО', Размер: '240mm' } },
-                // СЖО 360mm
-                { name: 'Arctic Liquid Freezer III 360 A-RGB', price: 8812, oldPrice: 9990, shop: 'Arctic', rating: 4.9,
-                    specs: { Тип: 'СЖО', Размер: '360mm' } },
-                { name: 'DeepCool LT720', price: 9990, oldPrice: 11990, shop: 'DeepCool', rating: 4.8,
-                    specs: { Тип: 'СЖО', Размер: '360mm' } },
-                { name: 'NZXT Kraken X73', price: 12990, oldPrice: 14990, shop: 'NZXT', rating: 4.9,
-                    specs: { Тип: 'СЖО', Размер: '360mm' } },
-                // Корпусные вентиляторы
-                { name: 'ID-Cooling ID-FAN-FL-12025K 120mm', price: 373, oldPrice: 599, shop: 'ID-Cooling', rating: 4.4,
-                    specs: { Тип: 'Вентилятор', Размер: '120x120x25mm', Скорость: '1250 об/мин' } },
-                { name: 'ARCTIC P14 Pro A-RGB White 140mm', price: 1632, oldPrice: 1990, shop: 'Arctic', rating: 4.7,
-                    specs: { Тип: 'Вентилятор', Размер: '140mm', Подсветка: 'ARGB' } },
+                { name: 'Arctic Liquid Freezer III 360', price: 12990, oldPrice: 15990, shop: 'Wildberries', rating: 4.8,
+                    specs: { Производитель: 'Arctic', Тип: 'Жидкостное', Размер: '360mm', TDP: '300W' } },
+                { name: 'be quiet! Dark Rock Pro 5', price: 13990, oldPrice: 16990, shop: 'DNS', rating: 4.7,
+                    specs: { Производитель: 'be quiet!', Тип: 'Воздушное', Размер: '140mm', TDP: '250W' } },
+                { name: 'DeepCool AK620', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.6,
+                    specs: { Производитель: 'DeepCool', Тип: 'Воздушное', Размер: '120mm', TDP: '260W' } },
             ],
             storage: [
-                // SSD NVMe
                 { name: 'Samsung 990 PRO 2TB NVMe', price: 24990, oldPrice: 29990, shop: 'Ozon', rating: 4.9,
-                    specs: { Производитель: 'Samsung', Тип: 'SSD NVMe', Объём: '2TB', Скорость: '7100 МБ/с' } },
-                { name: 'Samsung 990 PRO 1TB NVMe', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.8,
-                    specs: { Производитель: 'Samsung', Тип: 'SSD NVMe', Объём: '1TB', Скорость: '7100 МБ/с' } },
-                { name: 'WD Black SN850X 2TB', price: 19990, oldPrice: 23990, shop: 'Citilink', rating: 4.8,
-                    specs: { Производитель: 'Western Digital', Тип: 'SSD NVMe', Объём: '2TB', Скорость: '7100 МБ/с' } },
-                { name: 'WD Black SN850X 1TB', price: 11990, oldPrice: 14990, shop: 'MVideo', rating: 4.7,
-                    specs: { Производитель: 'Western Digital', Тип: 'SSD NVMe', Объём: '1TB', Скорость: '7100 МБ/с' } },
+                    specs: { Производитель: 'Samsung', Тип: 'SSD NVMe', Объём: '2TB', 'Скорость чтения': '7100 МБ/с' } },
+                { name: 'WD Black SN850X 2TB', price: 19990, oldPrice: 23990, shop: 'Wildberries', rating: 4.8,
+                    specs: { Производитель: 'Western Digital', Тип: 'SSD NVMe', Объём: '2TB',
+                    'Скорость чтения': '7100 МБ/с' } },
                 { name: 'Kingston KC3000 1TB', price: 9990, oldPrice: 11990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'Kingston', Тип: 'SSD NVMe', Объём: '1TB', Скорость: '7000 МБ/с' } },
-                { name: 'Crucial P5 Plus 1TB', price: 8990, oldPrice: 10990, shop: 'Ozon', rating: 4.5,
-                    specs: { Производитель: 'Crucial', Тип: 'SSD NVMe', Объём: '1TB', Скорость: '6600 МБ/с' } },
-                // SSD SATA
-                { name: 'Samsung 870 EVO 1TB SATA', price: 7990, oldPrice: 9990, shop: 'Wildberries', rating: 4.6,
-                    specs: { Производитель: 'Samsung', Тип: 'SSD SATA', Объём: '1TB', Скорость: '560 МБ/с' } },
-                { name: 'Crucial BX500 1TB SATA', price: 5990, oldPrice: 7990, shop: 'DNS', rating: 4.4,
-                    specs: { Производитель: 'Crucial', Тип: 'SSD SATA', Объём: '1TB', Скорость: '540 МБ/с' } },
-                // HDD
-                { name: 'WD Red Pro 8TB HDD', price: 14990, oldPrice: 17990, shop: 'Ozon', rating: 4.7,
-                    specs: { Производитель: 'Western Digital', Тип: 'HDD', Объём: '8TB', Скорость: '7200 RPM' } },
-                { name: 'Seagate Barracuda 4TB HDD', price: 6990, oldPrice: 8990, shop: 'Wildberries', rating: 4.5,
-                    specs: { Производитель: 'Seagate', Тип: 'HDD', Объём: '4TB', Скорость: '7200 RPM' } },
-                { name: 'WD Blue 2TB HDD', price: 4990, oldPrice: 6990, shop: 'DNS', rating: 4.4,
-                    specs: { Производитель: 'Western Digital', Тип: 'HDD', Объём: '2TB', Скорость: '7200 RPM' } },
+                    specs: { Производитель: 'Kingston', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '7000 МБ/с' } },
+                { name: 'Crucial P5 Plus 1TB', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5,
+                    specs: { Производитель: 'Crucial', Тип: 'SSD NVMe', Объём: '1TB', 'Скорость чтения': '6600 МБ/с' } },
             ],
             psu: [
                 { name: 'Corsair RM1000e 1000W', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.8,
                     specs: { Производитель: 'Corsair', Мощность: '1000W', 'Сертификат': '80+ Gold' } },
-                { name: 'Corsair RM850e 850W', price: 14990, oldPrice: 17990, shop: 'Citilink', rating: 4.7,
-                    specs: { Производитель: 'Corsair', Мощность: '850W', 'Сертификат': '80+ Gold' } },
-                { name: 'Corsair RM750e 750W', price: 12990, oldPrice: 15990, shop: 'MVideo', rating: 4.7,
-                    specs: { Производитель: 'Corsair', Мощность: '750W', 'Сертификат': '80+ Gold' } },
                 { name: 'Seasonic Focus GX-850', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.7,
                     specs: { Производитель: 'Seasonic', Мощность: '850W', 'Сертификат': '80+ Gold' } },
-                { name: 'Seasonic Prime TX-1000 1000W', price: 25990, oldPrice: 29990, shop: 'Ozon', rating: 4.9,
-                    specs: { Производитель: 'Seasonic', Мощность: '1000W', 'Сертификат': '80+ Titanium' } },
                 { name: 'be quiet! Straight Power 12 850W', price: 15990, oldPrice: 18990, shop: 'DNS', rating: 4.7,
                     specs: { Производитель: 'be quiet!', Мощность: '850W', 'Сертификат': '80+ Gold' } },
-                { name: 'EVGA SuperNOVA 850W Platinum', price: 19990, oldPrice: 23990, shop: 'MVideo', rating: 4.8,
-                    specs: { Производитель: 'EVGA', Мощность: '850W', 'Сертификат': '80+ Platinum' } },
                 { name: 'Cooler Master V850', price: 13990, oldPrice: 16990, shop: 'Citilink', rating: 4.6,
                     specs: { Производитель: 'Cooler Master', Мощность: '850W', 'Сертификат': '80+ Gold' } },
-                { name: 'DeepCool PQ-M 750W', price: 8990, oldPrice: 10990, shop: 'DNS', rating: 4.5,
-                    specs: { Производитель: 'DeepCool', Мощность: '750W', 'Сертификат': '80+ Gold' } },
             ],
             case: [
+                { 
+                    name: 'MUSON Корпус 1 (треугольный)', 
+                    price: 4990, 
+                    oldPrice: 6990, 
+                    shop: 'Citilink', 
+                    rating: 4.5,
+                    img: 'https://pix-up.ru/uploads/img_6a3d12536587a5.09701422_1782387283.jpg',
+                    specs: { Производитель: 'MUSON', Тип: 'Triangle', 'Материал': 'Сталь + Стекло' }
+                },
+                { 
+                    name: 'Jonsbo MOD3', 
+                    price: 25990, 
+                    oldPrice: 29990, 
+                    shop: 'Citilink', 
+                    rating: 4.8,
+                    img: 'https://ir.ozon.ru/multimedia/c1000/1000000000/jonsbo_mod3.jpg',
+                    specs: { Производитель: 'Jonsbo', Тип: 'Open Frame', 'Материал': 'Алюминий + Стекло' }
+                },
                 { name: 'NZXT H7 Flow', price: 11990, oldPrice: 14990, shop: 'Ozon', rating: 4.7,
                     specs: { Производитель: 'NZXT', Тип: 'Mid-Tower' } },
                 { name: 'Lian Li O11 Dynamic EVO', price: 16990, oldPrice: 19990, shop: 'Wildberries', rating: 4.8,
                     specs: { Производитель: 'Lian Li', Тип: 'Mid-Tower' } },
                 { name: 'Corsair 4000D Airflow', price: 9990, oldPrice: 12990, shop: 'DNS', rating: 4.6,
                     specs: { Производитель: 'Corsair', Тип: 'Mid-Tower' } },
-                { name: 'Corsair 5000D Airflow', price: 13990, oldPrice: 16990, shop: 'MVideo', rating: 4.7,
-                    specs: { Производитель: 'Corsair', Тип: 'Mid-Tower' } },
                 { name: 'Fractal Design Meshify 2', price: 12990, oldPrice: 15990, shop: 'Citilink', rating: 4.7,
                     specs: { Производитель: 'Fractal Design', Тип: 'Mid-Tower' } },
-                { name: 'Fractal Design Define 7', price: 14990, oldPrice: 17990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'Fractal Design', Тип: 'Mid-Tower' } },
-                { name: 'Cooler Master MasterBox TD500', price: 8990, oldPrice: 10990, shop: 'Ozon', rating: 4.5,
-                    specs: { Производитель: 'Cooler Master', Тип: 'Mid-Tower' } },
-                { name: 'Phanteks Eclipse P400A', price: 7990, oldPrice: 9990, shop: 'Wildberries', rating: 4.5,
-                    specs: { Производитель: 'Phanteks', Тип: 'Mid-Tower' } },
-                { name: 'Thermaltake View 71', price: 15990, oldPrice: 18990, shop: 'Citilink', rating: 4.7,
-                    specs: { Производитель: 'Thermaltake', Тип: 'Full Tower' } },
-                { name: 'DeepCool MATREXX 55 MESH', price: 4990, oldPrice: 6990, shop: 'DNS', rating: 4.3,
+                { name: 'DeepCool MATREXX 55', price: 4990, oldPrice: 6990, shop: 'DNS', rating: 4.3,
                     specs: { Производитель: 'DeepCool', Тип: 'Mid-Tower' } },
-                { name: 'AeroCool Cylon', price: 3990, oldPrice: 5990, shop: 'Ozon', rating: 4.2,
-                    specs: { Производитель: 'AeroCool', Тип: 'Mid-Tower' } },
                 { name: 'Zalman S2', price: 3490, oldPrice: 4990, shop: 'Wildberries', rating: 4.2,
                     specs: { Производитель: 'Zalman', Тип: 'Mid-Tower' } },
+                { name: 'Cooler Master MasterBox TD500', price: 8990, oldPrice: 10990, shop: 'Ozon', rating: 4.5,
+                    specs: { Производитель: 'Cooler Master', Тип: 'Mid-Tower' } },
+                { name: 'Thermaltake View 71', price: 15990, oldPrice: 18990, shop: 'Citilink', rating: 4.7,
+                    specs: { Производитель: 'Thermaltake', Тип: 'Full Tower' } },
             ],
             keyboard: [
                 { name: 'Razer Huntsman V3 Pro TKL', price: 15990, oldPrice: 18990, shop: 'Ozon', rating: 4.8,
                     specs: { Производитель: 'Razer', Тип: 'Механическая', Подсветка: 'RGB' } },
-                { name: 'Razer BlackWidow V4', price: 11990, oldPrice: 14990, shop: 'Wildberries', rating: 4.7,
-                    specs: { Производитель: 'Razer', Тип: 'Механическая', Подсветка: 'RGB' } },
                 { name: 'Corsair K70 RGB PRO', price: 12990, oldPrice: 15990, shop: 'DNS', rating: 4.7,
                     specs: { Производитель: 'Corsair', Тип: 'Механическая', Подсветка: 'RGB' } },
-                { name: 'Corsair K65 MINI', price: 7990, oldPrice: 9990, shop: 'MVideo', rating: 4.6,
-                    specs: { Производитель: 'Corsair', Тип: 'Механическая', Подсветка: 'RGB' } },
-                { name: 'Logitech G915 TKL', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.7,
+                { name: 'Logitech G915 TKL', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.6,
                     specs: { Производитель: 'Logitech', Тип: 'Mechanical', Подсветка: 'RGB' } },
                 { name: 'HyperX Alloy Origins 65', price: 8990, oldPrice: 10990, shop: 'Citilink', rating: 4.5,
                     specs: { Производитель: 'HyperX', Тип: 'Механическая', Подсветка: 'RGB' } },
@@ -1064,28 +872,20 @@
             mouse: [
                 { name: 'Logitech PRO X Superlight', price: 17990, oldPrice: 20990, shop: 'Ozon', rating: 4.9,
                     specs: { Производитель: 'Logitech', Тип: 'Беспроводная', DPI: '25600' } },
-                { name: 'Logitech G502 X PLUS', price: 14990, oldPrice: 17990, shop: 'Wildberries', rating: 4.8,
-                    specs: { Производитель: 'Logitech', Тип: 'Беспроводная', DPI: '25600' } },
-                { name: 'Razer Basilisk V3 Pro', price: 9990, oldPrice: 12990, shop: 'MVideo', rating: 4.7,
+                { name: 'Razer Basilisk V3 Pro', price: 9990, oldPrice: 12990, shop: 'Wildberries', rating: 4.7,
                     specs: { Производитель: 'Razer', Тип: 'Беспроводная', DPI: '26000' } },
-                { name: 'Razer DeathAdder V3 Pro', price: 12990, oldPrice: 15990, shop: 'Ozon', rating: 4.8,
-                    specs: { Производитель: 'Razer', Тип: 'Беспроводная', DPI: '26000' } },
-                { name: 'SteelSeries Rival 5', price: 6990, oldPrice: 8990, shop: 'DNS', rating: 4.6,
+                { name: 'SteelSeries Rival 5', price: 6990, oldPrice: 8990, shop: 'DNS', rating: 4.5,
                     specs: { Производитель: 'SteelSeries', Тип: 'Проводная', DPI: '18000' } },
-                { name: 'HyperX Pulsefire Haste 2', price: 5990, oldPrice: 7990, shop: 'Citilink', rating: 4.5,
+                { name: 'HyperX Pulsefire Haste 2', price: 5990, oldPrice: 7990, shop: 'Citilink', rating: 4.6,
                     specs: { Производитель: 'HyperX', Тип: 'Беспроводная', DPI: '26000' } },
             ],
             speaker: [
-                { name: 'Logitech Z906 5.1', price: 32990, oldPrice: 39990, shop: 'Ozon', rating: 4.8,
+                { name: 'Logitech Z906 5.1', price: 32990, oldPrice: 39990, shop: 'Ozon', rating: 4.7,
                     specs: { Производитель: 'Logitech', Тип: '5.1', Мощность: '500W' } },
-                { name: 'Logitech Z623 2.1', price: 15990, oldPrice: 18990, shop: 'Wildberries', rating: 4.7,
-                    specs: { Производитель: 'Logitech', Тип: '2.1', Мощность: '200W' } },
-                { name: 'Edifier R1280T', price: 8990, oldPrice: 10990, shop: 'DNS', rating: 4.5,
+                { name: 'Edifier R1280T', price: 8990, oldPrice: 10990, shop: 'Wildberries', rating: 4.5,
                     specs: { Производитель: 'Edifier', Тип: '2.0', Мощность: '42W' } },
-                { name: 'Creative Pebble Pro', price: 4990, oldPrice: 5990, shop: 'Ozon', rating: 4.4,
+                { name: 'Creative Pebble Pro', price: 4990, oldPrice: 5990, shop: 'DNS', rating: 4.4,
                     specs: { Производитель: 'Creative', Тип: '2.0', Мощность: '12W' } },
-                { name: 'JBL Quantum Duo', price: 12990, oldPrice: 15990, shop: 'DNS', rating: 4.6,
-                    specs: { Производитель: 'JBL', Тип: '2.0', Мощность: '40W' } },
             ],
         };
 
@@ -1114,10 +914,10 @@
         }
 
         // ============================================================
-        // 3D СЦЕНА — ТОЛЬКО ПУСТОЙ КОРПУС
+        // 3D СЦЕНА
         // ============================================================
 
-        let scene, camera, renderer, controls, pcGroup;
+        let scene, camera, renderer, controls, pcGroup, monitorGroup;
         let componentMeshes = {};
 
         function init3DScene() {
@@ -1194,10 +994,6 @@
             });
         }
 
-        // ============================================================
-        // ПУСТОЙ КОРПУС (без деталей)
-        // ============================================================
-
         function createEmptyCase() {
             pcGroup = new THREE.Group();
             pcGroup.position.set(0, 0, 0);
@@ -1217,7 +1013,7 @@
             caseMesh.receiveShadow = true;
             pcGroup.add(caseMesh);
 
-            // Рамка корпуса (синяя подсветка)
+            // Рамка корпуса
             const edgeGeo = new THREE.EdgesGeometry(caseGeo);
             const edgeMat = new THREE.LineBasicMaterial({
                 color: 0x4a8cff,
@@ -1242,530 +1038,125 @@
             glass.castShadow = true;
             pcGroup.add(glass);
 
-            // Нижняя панель
-            const bottomGeo = new THREE.BoxGeometry(1.9, 0.08, 1.5);
-            const bottomMat = new THREE.MeshPhongMaterial({
-                color: 0x0a1220,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-            const bottom = new THREE.Mesh(bottomGeo, bottomMat);
-            bottom.position.set(0, -1.1, 0);
-            bottom.castShadow = true;
-            bottom.receiveShadow = true;
-            pcGroup.add(bottom);
-
-            // Верхняя панель
-            const topGeo = new THREE.BoxGeometry(1.9, 0.08, 1.5);
-            const topMat = new THREE.MeshPhongMaterial({
-                color: 0x0a1220,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-            const top = new THREE.Mesh(topGeo, topMat);
-            top.position.set(0, 1.1, 0);
-            top.castShadow = true;
-            top.receiveShadow = true;
-            pcGroup.add(top);
-
-            // Задняя панель
-            const backGeo = new THREE.BoxGeometry(1.9, 1.9, 0.08);
-            const backMat = new THREE.MeshPhongMaterial({
-                color: 0x0a1220,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-            const back = new THREE.Mesh(backGeo, backMat);
-            back.position.set(0, 0, -0.8);
-            back.castShadow = true;
-            back.receiveShadow = true;
-            pcGroup.add(back);
-
-            // Передние вентиляторы (только рамки)
-            for (let i = 0; i < 3; i++) {
-                const ringGeo = new THREE.RingGeometry(0.1, 0.13, 24);
-                const ringMat = new THREE.MeshPhongMaterial({
-                    color: 0x2a4a6a,
-                    transparent: true,
-                    opacity: 0.3,
-                    side: THREE.DoubleSide
-                });
-                const ring = new THREE.Mesh(ringGeo, ringMat);
-                ring.rotation.y = Math.PI / 2;
-                ring.position.set(0, -0.1 + i * 0.28, 0.85);
-                pcGroup.add(ring);
-            }
-
             scene.add(pcGroup);
-
-            // Сохраняем ссылку на корпус
             componentMeshes.case = pcGroup;
         }
 
         // ============================================================
-        // РЕАЛИСТИЧНЫЕ ДЕТАЛИ ДЛЯ УСТАНОВКИ
+        // РЕАЛИСТИЧНЫЕ ДЕТАЛИ
         // ============================================================
 
         function createDetailCPU() {
             const group = new THREE.Group();
-
             // Основа
             const baseGeo = new THREE.BoxGeometry(0.35, 0.04, 0.35);
-            const baseMat = new THREE.MeshPhongMaterial({
-                color: 0x222222,
-                roughness: 0.4,
-                metalness: 0.6
-            });
+            const baseMat = new THREE.MeshPhongMaterial({ color: 0x222222, roughness: 0.4, metalness: 0.6 });
             const base = new THREE.Mesh(baseGeo, baseMat);
             base.position.y = 0;
             group.add(base);
-
-            // IHS (крышка)
+            // IHS
             const ihsGeo = new THREE.BoxGeometry(0.3, 0.02, 0.3);
-            const ihsMat = new THREE.MeshPhongMaterial({
-                color: 0xcccccc,
-                roughness: 0.2,
-                metalness: 0.8,
-                emissive: 0x888888,
-                emissiveIntensity: 0.1
-            });
+            const ihsMat = new THREE.MeshPhongMaterial({ color: 0xcccccc, roughness: 0.2, metalness: 0.8, emissive: 0x888888,
+                emissiveIntensity: 0.1 });
             const ihs = new THREE.Mesh(ihsGeo, ihsMat);
             ihs.position.y = 0.03;
             group.add(ihs);
-
-            // Подложка
-            const subGeo = new THREE.BoxGeometry(0.4, 0.015, 0.4);
-            const subMat = new THREE.MeshPhongMaterial({
-                color: 0x00aa44,
-                roughness: 0.6,
-                metalness: 0.2
-            });
-            const sub = new THREE.Mesh(subGeo, subMat);
-            sub.position.y = -0.025;
-            group.add(sub);
-
-            // Контакты
-            for (let i = 0; i < 20; i++) {
-                const pinGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.01, 4);
-                const pinMat = new THREE.MeshPhongMaterial({
-                    color: 0xffaa00,
-                    roughness: 0.3,
-                    metalness: 0.7
-                });
-                const pin = new THREE.Mesh(pinGeo, pinMat);
-                pin.position.set(
-                    -0.15 + (i % 10) * 0.033,
-                    -0.035,
-                    -0.15 + Math.floor(i / 10) * 0.033
-                );
-                group.add(pin);
-            }
-
             return group;
         }
 
         function createDetailGPU() {
             const group = new THREE.Group();
-
             // PCB
             const pcbGeo = new THREE.BoxGeometry(0.5, 0.08, 0.7);
-            const pcbMat = new THREE.MeshPhongMaterial({
-                color: 0x111111,
-                roughness: 0.6,
-                metalness: 0.3
-            });
+            const pcbMat = new THREE.MeshPhongMaterial({ color: 0x111111, roughness: 0.6, metalness: 0.3 });
             const pcb = new THREE.Mesh(pcbGeo, pcbMat);
             pcb.position.y = 0;
             group.add(pcb);
-
-            // Радиатор
-            for (let i = 0; i < 8; i++) {
-                const finGeo = new THREE.BoxGeometry(0.01, 0.15, 0.6);
-                const finMat = new THREE.MeshPhongMaterial({
-                    color: 0x666666,
-                    roughness: 0.4,
-                    metalness: 0.7
-                });
-                const fin = new THREE.Mesh(finGeo, finMat);
-                fin.position.set(-0.2 + i * 0.057, 0.08, 0);
-                group.add(fin);
-            }
-
             // Вентиляторы
             for (let i = 0; i < 2; i++) {
-                const fanGroup = new THREE.Group();
-
                 const fanGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.015, 24);
-                const fanMat = new THREE.MeshPhongMaterial({
-                    color: 0x333333,
-                    roughness: 0.5,
-                    metalness: 0.3
-                });
+                const fanMat = new THREE.MeshPhongMaterial({ color: 0x333333, roughness: 0.5, metalness: 0.3 });
                 const fan = new THREE.Mesh(fanGeo, fanMat);
                 fan.rotation.x = Math.PI / 2;
-                fanGroup.add(fan);
-
-                for (let j = 0; j < 7; j++) {
-                    const bladeGeo = new THREE.BoxGeometry(0.08, 0.002, 0.01);
-                    const bladeMat = new THREE.MeshPhongMaterial({
-                        color: 0x555555,
-                        roughness: 0.5,
-                        metalness: 0.3
-                    });
-                    const blade = new THREE.Mesh(bladeGeo, bladeMat);
-                    blade.rotation.z = (j / 7) * Math.PI * 2;
-                    blade.position.set(
-                        Math.sin((j / 7) * Math.PI * 2) * 0.07,
-                        0.008,
-                        Math.cos((j / 7) * Math.PI * 2) * 0.07
-                    );
-                    fanGroup.add(blade);
-                }
-
-                fanGroup.position.set(-0.12 + i * 0.24, 0.12, 0);
-                group.add(fanGroup);
+                fan.position.set(-0.12 + i * 0.24, 0.12, 0);
+                group.add(fan);
             }
-
-            // Бекплейт
-            const backGeo = new THREE.BoxGeometry(0.45, 0.015, 0.6);
-            const backMat = new THREE.MeshPhongMaterial({
-                color: 0x222222,
-                roughness: 0.5,
-                metalness: 0.6
-            });
-            const back = new THREE.Mesh(backGeo, backMat);
-            back.position.y = -0.05;
-            group.add(back);
-
-            // Разъём питания
-            const powerGeo = new THREE.BoxGeometry(0.08, 0.02, 0.04);
-            const powerMat = new THREE.MeshPhongMaterial({
-                color: 0xff4400,
-                roughness: 0.3,
-                metalness: 0.2,
-                emissive: 0xff4400,
-                emissiveIntensity: 0.2
-            });
-            const power = new THREE.Mesh(powerGeo, powerMat);
-            power.position.set(0.25, 0, 0.35);
-            group.add(power);
-
             return group;
         }
 
         function createDetailRAM() {
             const group = new THREE.Group();
-
-            // PCB
             const pcbGeo = new THREE.BoxGeometry(0.04, 0.12, 0.2);
-            const pcbMat = new THREE.MeshPhongMaterial({
-                color: 0x111111,
-                roughness: 0.6,
-                metalness: 0.3
-            });
+            const pcbMat = new THREE.MeshPhongMaterial({ color: 0x111111, roughness: 0.6, metalness: 0.3 });
             const pcb = new THREE.Mesh(pcbGeo, pcbMat);
             pcb.position.y = 0;
             group.add(pcb);
-
-            // Чипы
-            for (let i = 0; i < 4; i++) {
-                const chipGeo = new THREE.BoxGeometry(0.03, 0.02, 0.02);
-                const chipMat = new THREE.MeshPhongMaterial({
-                    color: 0x333333,
-                    roughness: 0.4,
-                    metalness: 0.5
-                });
-                const chip = new THREE.Mesh(chipGeo, chipMat);
-                chip.position.set(0, 0.02, -0.06 + i * 0.04);
-                group.add(chip);
-            }
-
             // Радиатор
             const radGeo = new THREE.BoxGeometry(0.045, 0.14, 0.035);
-            const radMat = new THREE.MeshPhongMaterial({
-                color: 0xcc2222,
-                roughness: 0.3,
-                metalness: 0.6,
-                emissive: 0xcc2222,
-                emissiveIntensity: 0.1
-            });
+            const radMat = new THREE.MeshPhongMaterial({ color: 0xcc2222, roughness: 0.3, metalness: 0.6, emissive: 0xcc2222,
+                emissiveIntensity: 0.1 });
             const rad = new THREE.Mesh(radGeo, radMat);
             rad.position.set(0, 0, 0.11);
             group.add(rad);
-
-            // Подсветка
-            const ledGeo = new THREE.BoxGeometry(0.03, 0.003, 0.01);
-            const ledMat = new THREE.MeshPhongMaterial({
-                color: 0x00ccff,
-                emissive: 0x00ccff,
-                emissiveIntensity: 0.5
-            });
-            const led = new THREE.Mesh(ledGeo, ledMat);
-            led.position.set(0, 0.08, 0.12);
-            group.add(led);
-
             return group;
         }
 
         function createDetailMotherboard() {
             const group = new THREE.Group();
-
-            // PCB
             const pcbGeo = new THREE.BoxGeometry(1.4, 0.04, 1.2);
-            const pcbMat = new THREE.MeshPhongMaterial({
-                color: 0x00aa44,
-                roughness: 0.6,
-                metalness: 0.2,
-                emissive: 0x00aa44,
-                emissiveIntensity: 0.05
-            });
+            const pcbMat = new THREE.MeshPhongMaterial({ color: 0x00aa44, roughness: 0.6, metalness: 0.2, emissive: 0x00aa44,
+                emissiveIntensity: 0.05 });
             const pcb = new THREE.Mesh(pcbGeo, pcbMat);
             pcb.position.y = 0;
             group.add(pcb);
-
-            // Дорожки
-            for (let i = 0; i < 20; i++) {
-                const traceGeo = new THREE.BoxGeometry(0.3, 0.002, 0.005);
-                const traceMat = new THREE.MeshPhongMaterial({
-                    color: 0x88cc88,
-                    roughness: 0.3,
-                    metalness: 0.4
-                });
-                const trace = new THREE.Mesh(traceGeo, traceMat);
-                trace.position.set(
-                    -0.6 + i * 0.065,
-                    0.022,
-                    0.5 + Math.sin(i * 0.5) * 0.3
-                );
-                trace.rotation.z = Math.sin(i * 0.3) * 0.1;
-                group.add(trace);
-            }
-
-            // Сокет процессора
+            // Сокет
             const socketGeo = new THREE.BoxGeometry(0.35, 0.015, 0.35);
-            const socketMat = new THREE.MeshPhongMaterial({
-                color: 0x333333,
-                roughness: 0.4,
-                metalness: 0.5
-            });
+            const socketMat = new THREE.MeshPhongMaterial({ color: 0x333333, roughness: 0.4, metalness: 0.5 });
             const socket = new THREE.Mesh(socketGeo, socketMat);
             socket.position.set(0, 0.025, 0);
             group.add(socket);
-
-            // Слоты RAM
-            for (let i = 0; i < 4; i++) {
-                const slotGeo = new THREE.BoxGeometry(0.04, 0.005, 0.2);
-                const slotMat = new THREE.MeshPhongMaterial({
-                    color: 0x666666,
-                    roughness: 0.5,
-                    metalness: 0.3
-                });
-                const slot = new THREE.Mesh(slotGeo, slotMat);
-                slot.position.set(0.25 + i * 0.09, 0.02, 0.5);
-                group.add(slot);
-            }
-
-            // Слоты PCIe
-            for (let i = 0; i < 3; i++) {
-                const slotGeo = new THREE.BoxGeometry(0.4, 0.005, 0.06);
-                const slotMat = new THREE.MeshPhongMaterial({
-                    color: 0x666666,
-                    roughness: 0.5,
-                    metalness: 0.3
-                });
-                const slot = new THREE.Mesh(slotGeo, slotMat);
-                slot.position.set(-0.3, 0.02, -0.3 - i * 0.2);
-                group.add(slot);
-            }
-
-            // Чипсет
-            const chipGeo = new THREE.BoxGeometry(0.1, 0.015, 0.1);
-            const chipMat = new THREE.MeshPhongMaterial({
-                color: 0x222222,
-                roughness: 0.4,
-                metalness: 0.5
-            });
-            const chip = new THREE.Mesh(chipGeo, chipMat);
-            chip.position.set(0.5, 0.025, -0.4);
-            group.add(chip);
-
-            // Конденсаторы
-            for (let i = 0; i < 12; i++) {
-                const capGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.02, 8);
-                const capMat = new THREE.MeshPhongMaterial({
-                    color: 0x888888,
-                    roughness: 0.3,
-                    metalness: 0.6
-                });
-                const cap = new THREE.Mesh(capGeo, capMat);
-                cap.position.set(
-                    -0.6 + i * 0.055,
-                    0.025,
-                    0.45 + Math.sin(i * 0.7) * 0.05
-                );
-                group.add(cap);
-            }
-
             return group;
         }
 
         function createDetailCooler() {
             const group = new THREE.Group();
-
-            // Башня радиатора
             for (let i = 0; i < 15; i++) {
                 const finGeo = new THREE.BoxGeometry(0.25, 0.01, 0.35);
-                const finMat = new THREE.MeshPhongMaterial({
-                    color: 0x888888,
-                    roughness: 0.4,
-                    metalness: 0.7
-                });
+                const finMat = new THREE.MeshPhongMaterial({ color: 0x888888, roughness: 0.4, metalness: 0.7 });
                 const fin = new THREE.Mesh(finGeo, finMat);
                 fin.position.set(0, 0.01 + i * 0.02, 0);
                 group.add(fin);
             }
-
-            // Тепловые трубки
-            for (let i = 0; i < 4; i++) {
-                const pipeGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8);
-                const pipeMat = new THREE.MeshPhongMaterial({
-                    color: 0xcc8844,
-                    roughness: 0.3,
-                    metalness: 0.8
-                });
-                const pipe = new THREE.Mesh(pipeGeo, pipeMat);
-                pipe.position.set(
-                    -0.08 + i * 0.053,
-                    0.18,
-                    0
-                );
-                pipe.rotation.x = 0.2;
-                group.add(pipe);
-            }
-
-            // Вентилятор
-            const fanGroup = new THREE.Group();
-            const fanGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.015, 24);
-            const fanMat = new THREE.MeshPhongMaterial({
-                color: 0x333333,
-                roughness: 0.5,
-                metalness: 0.3
-            });
-            const fan = new THREE.Mesh(fanGeo, fanMat);
-            fan.rotation.x = Math.PI / 2;
-            fanGroup.add(fan);
-
-            for (let j = 0; j < 7; j++) {
-                const bladeGeo = new THREE.BoxGeometry(0.1, 0.002, 0.01);
-                const bladeMat = new THREE.MeshPhongMaterial({
-                    color: 0x555555,
-                    roughness: 0.5,
-                    metalness: 0.3
-                });
-                const blade = new THREE.Mesh(bladeGeo, bladeMat);
-                blade.rotation.z = (j / 7) * Math.PI * 2;
-                blade.position.set(
-                    Math.sin((j / 7) * Math.PI * 2) * 0.08,
-                    0.008,
-                    Math.cos((j / 7) * Math.PI * 2) * 0.08
-                );
-                fanGroup.add(blade);
-            }
-            fanGroup.position.set(0, 0.18, 0.18);
-            group.add(fanGroup);
-
             return group;
         }
 
         function createDetailStorage() {
             const group = new THREE.Group();
-
-            // Корпус
             const bodyGeo = new THREE.BoxGeometry(0.2, 0.06, 0.35);
-            const bodyMat = new THREE.MeshPhongMaterial({
-                color: 0x222222,
-                roughness: 0.4,
-                metalness: 0.5
-            });
+            const bodyMat = new THREE.MeshPhongMaterial({ color: 0x222222, roughness: 0.4, metalness: 0.5 });
             const body = new THREE.Mesh(bodyGeo, bodyMat);
             body.position.y = 0;
             group.add(body);
-
-            // Наклейка
-            const labelGeo = new THREE.BoxGeometry(0.15, 0.002, 0.25);
-            const labelMat = new THREE.MeshPhongMaterial({
-                color: 0x333333,
-                roughness: 0.3,
-                metalness: 0.2
-            });
-            const label = new THREE.Mesh(labelGeo, labelMat);
-            label.position.set(0, 0.032, 0);
-            group.add(label);
-
-            // Разъём
-            const connGeo = new THREE.BoxGeometry(0.04, 0.015, 0.05);
-            const connMat = new THREE.MeshPhongMaterial({
-                color: 0x888888,
-                roughness: 0.3,
-                metalness: 0.6
-            });
-            const conn = new THREE.Mesh(connGeo, connMat);
-            conn.position.set(0, -0.005, 0.2);
-            group.add(conn);
-
             return group;
         }
 
         function createDetailPSU() {
             const group = new THREE.Group();
-
-            // Корпус
             const bodyGeo = new THREE.BoxGeometry(0.5, 0.15, 0.3);
-            const bodyMat = new THREE.MeshPhongMaterial({
-                color: 0x333333,
-                roughness: 0.4,
-                metalness: 0.5
-            });
+            const bodyMat = new THREE.MeshPhongMaterial({ color: 0x333333, roughness: 0.4, metalness: 0.5 });
             const body = new THREE.Mesh(bodyGeo, bodyMat);
             body.position.y = 0;
             group.add(body);
-
-            // Вентилятор
-            const fanGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.015, 24);
-            const fanMat = new THREE.MeshPhongMaterial({
-                color: 0x222222,
-                roughness: 0.5,
-                metalness: 0.3
-            });
-            const fan = new THREE.Mesh(fanGeo, fanMat);
-            fan.rotation.x = Math.PI / 2;
-            fan.position.set(0, 0, 0.16);
-            group.add(fan);
-
-            // Разъёмы
-            for (let i = 0; i < 3; i++) {
-                const plugGeo = new THREE.BoxGeometry(0.02, 0.02, 0.03);
-                const plugMat = new THREE.MeshPhongMaterial({
-                    color: 0x666666,
-                    roughness: 0.3,
-                    metalness: 0.4
-                });
-                const plug = new THREE.Mesh(plugGeo, plugMat);
-                plug.position.set(-0.1 + i * 0.1, -0.02, -0.16);
-                group.add(plug);
-            }
-
             return group;
         }
 
         // ============================================================
-        // ОБНОВЛЕНИЕ 3D СЦЕНЫ
+        // ОБНОВЛЕНИЕ 3D
         // ============================================================
 
         function update3D() {
             if (!pcGroup) return;
 
-            // Удаляем старые детали
             const toRemove = ['cpu', 'gpu', 'ram', 'motherboard', 'cooler', 'storage', 'psu'];
             toRemove.forEach(key => {
                 if (componentMeshes[key]) {
@@ -1774,7 +1165,6 @@
                 }
             });
 
-            // Карта соответствия категорий и функций создания деталей
             const detailMap = {
                 cpu: { func: createDetailCPU, pos: { x: 0, y: 0.32, z: 0.4 } },
                 gpu: { func: createDetailGPU, pos: { x: -0.3, y: -0.2, z: 0.6 } },
@@ -1785,7 +1175,6 @@
                 psu: { func: createDetailPSU, pos: { x: 0.45, y: -0.75, z: -0.3 } },
             };
 
-            // Добавляем выбранные детали
             for (const [category, index] of Object.entries(selectedBuild)) {
                 const config = detailMap[category];
                 if (!config) continue;
@@ -1794,42 +1183,8 @@
                 detail.position.set(config.pos.x, config.pos.y, config.pos.z);
                 pcGroup.add(detail);
                 componentMeshes[category] = detail;
-
-                // Добавляем название детали
-                const products = PRODUCTS[category] || [];
-                const product = products[index];
-                if (product) {
-                    const canvas2 = document.createElement('canvas');
-                    canvas2.width = 256;
-                    canvas2.height = 64;
-                    const ctx = canvas2.getContext('2d');
-                    ctx.fillStyle = 'rgba(10, 14, 26, 0.85)';
-                    ctx.beginPath();
-                    ctx.roundRect(0, 0, 256, 64, 12);
-                    ctx.fill();
-                    ctx.font = 'bold 16px Inter, sans-serif';
-                    ctx.fillStyle = '#4a8cff';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    const shortName = product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name;
-                    ctx.fillText(shortName, 128, 34);
-
-                    const spriteMat = new THREE.SpriteMaterial({
-                        map: new THREE.CanvasTexture(canvas2),
-                        transparent: true,
-                        depthTest: false,
-                    });
-                    const sprite = new THREE.Sprite(spriteMat);
-                    sprite.position.set(config.pos.x, config.pos.y + 0.35, config.pos.z);
-                    sprite.scale.set(0.9, 0.22, 1);
-                    pcGroup.add(sprite);
-                }
             }
         }
-
-        // ============================================================
-        // АНИМАЦИЯ
-        // ============================================================
 
         function animate3D() {
             requestAnimationFrame(animate3D);
@@ -1878,7 +1233,7 @@
 
             grid.innerHTML = sorted.map((p, index) => {
                 const isSelected = selectedBuild[currentCategory] === index;
-                const imgSrc = getProductImage(p.name);
+                const imgSrc = p.img || getProductImage(p.name);
                 return `
                         <div class="card">
                             <div class="image-wrap">
@@ -1968,7 +1323,7 @@
             document.getElementById('modalPrice').textContent = p.price.toLocaleString() + ' ₽';
             document.getElementById('modalPriceOld').textContent = p.oldPrice ? p.oldPrice.toLocaleString() + ' ₽' : '';
             document.getElementById('modalRating').textContent = '⭐ ' + p.rating.toFixed(1);
-            document.getElementById('modalImg').src = getProductImage(p.name);
+            document.getElementById('modalImg').src = p.img || getProductImage(p.name);
 
             const specsContainer = document.getElementById('modalSpecs');
             if (p.specs) {
@@ -2124,10 +1479,12 @@
                 init3DScene();
                 setTimeout(update3D, 300);
             }, 300);
-            console.log('✅ PC Builder 3D v6.0 загружен!');
+            console.log('✅ PC Builder 3D v7.0 загружен!');
             const total = Object.values(PRODUCTS).reduce((sum, arr) => sum + arr.length, 0);
             console.log('📦 Всего товаров: ' + total);
             console.log('🇷🇺 Только Россия!');
+            console.log('🔑 Ключ для оплаты: ' + YOOMONEY_IP);
+            console.log('💳 Счёт: ' + YOOMONEY_ACCOUNT);
         });
     </script>
 
