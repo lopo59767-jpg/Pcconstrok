@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PC Builder 3D — Собери и купи ПК</title>
+    <title>PC Builder 3D — Собери реалистичный ПК</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">
@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
+        /* ===== ВЕСЬ CSS ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -580,19 +581,19 @@
     <div class="layout">
 
         <aside class="sidebar" id="sidebar">
-            <div class="category active" data-cat="cpu"><span><i class="fas fa-microchip"></i> Процессоры</span><span class="count">131</span></div>
-            <div class="category" data-cat="gpu"><span><i class="fas fa-desktop"></i> Видеокарты</span><span class="count">70</span></div>
-            <div class="category" data-cat="ram"><span><i class="fas fa-memory"></i> Оперативная память</span><span class="count">72</span></div>
-            <div class="category" data-cat="motherboard"><span><i class="fas fa-server"></i> Материнские платы</span><span class="count">150</span></div>
-            <div class="category" data-cat="cooler"><span><i class="fas fa-snowflake"></i> Охлаждение</span><span class="count">85</span></div>
-            <div class="category" data-cat="storage"><span><i class="fas fa-hdd"></i> Накопители</span><span class="count">50</span></div>
-            <div class="category" data-cat="psu"><span><i class="fas fa-plug"></i> Блоки питания</span><span class="count">40</span></div>
-            <div class="category" data-cat="case"><span><i class="fas fa-cube"></i> Корпуса</span><span class="count">30</span></div>
+            <div class="category active" data-cat="cpu"><span><i class="fas fa-microchip"></i> Процессоры</span><span class="count">5</span></div>
+            <div class="category" data-cat="gpu"><span><i class="fas fa-desktop"></i> Видеокарты</span><span class="count">5</span></div>
+            <div class="category" data-cat="ram"><span><i class="fas fa-memory"></i> Оперативная память</span><span class="count">2</span></div>
+            <div class="category" data-cat="motherboard"><span><i class="fas fa-server"></i> Материнские платы</span><span class="count">2</span></div>
+            <div class="category" data-cat="cooler"><span><i class="fas fa-snowflake"></i> Охлаждение</span><span class="count">2</span></div>
+            <div class="category" data-cat="storage"><span><i class="fas fa-hdd"></i> Накопители</span><span class="count">2</span></div>
+            <div class="category" data-cat="psu"><span><i class="fas fa-plug"></i> Блоки питания</span><span class="count">2</span></div>
+            <div class="category" data-cat="case"><span><i class="fas fa-cube"></i> Корпуса</span><span class="count">2</span></div>
             <div class="divider"></div>
-            <div class="category" data-cat="monitor"><span><i class="fas fa-tv"></i> Мониторы</span><span class="count">30</span></div>
-            <div class="category" data-cat="keyboard"><span><i class="fas fa-keyboard"></i> Клавиатуры</span><span class="count">25</span></div>
-            <div class="category" data-cat="mouse"><span><i class="fas fa-mouse"></i> Мыши</span><span class="count">25</span></div>
-            <div class="category" data-cat="speaker"><span><i class="fas fa-volume-up"></i> Колонки</span><span class="count">20</span></div>
+            <div class="category" data-cat="monitor"><span><i class="fas fa-tv"></i> Мониторы</span><span class="count">2</span></div>
+            <div class="category" data-cat="keyboard"><span><i class="fas fa-keyboard"></i> Клавиатуры</span><span class="count">2</span></div>
+            <div class="category" data-cat="mouse"><span><i class="fas fa-mouse"></i> Мыши</span><span class="count">2</span></div>
+            <div class="category" data-cat="speaker"><span><i class="fas fa-volume-up"></i> Колонки</span><span class="count">2</span></div>
 
             <div class="build-summary">
                 <h4>📦 Ваша сборка</h4>
@@ -607,7 +608,7 @@
 
         <main class="main" id="main">
             <div class="top">
-                <h2 id="catTitle">Процессоры <small>для России (131 товар)</small></h2>
+                <h2 id="catTitle">Процессоры <small>для России (5 товаров)</small></h2>
                 <div class="sort-bar">
                     <span style="color:#666;font-size:13px;">Сортировать:</span>
                     <select id="sortSelect">
@@ -698,7 +699,7 @@
         }
 
         // ============================================================
-        // ТОВАРЫ (сокращённая версия для примера)
+        // ТОВАРЫ
         // ============================================================
 
         const PRODUCTS = {
@@ -824,6 +825,7 @@
 
         let scene, camera, renderer, controls, pcGroup, monitorGroup;
         let selectedParts = {};
+        let componentMeshes = {};
 
         function init3DScene() {
             const canvas = document.getElementById('canvas3d');
@@ -857,21 +859,21 @@
             controls.update();
 
             // Освещение
-            const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambient);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
             dirLight.position.set(5, 10, 5);
             dirLight.castShadow = true;
             dirLight.shadow.mapSize.width = 1024;
             dirLight.shadow.mapSize.height = 1024;
             scene.add(dirLight);
 
-            const fillLight = new THREE.DirectionalLight(0x4466ff, 0.3);
+            const fillLight = new THREE.DirectionalLight(0x4466ff, 0.4);
             fillLight.position.set(-3, 1, -5);
             scene.add(fillLight);
 
-            const rimLight = new THREE.DirectionalLight(0xff6644, 0.2);
+            const rimLight = new THREE.DirectionalLight(0xff6644, 0.3);
             rimLight.position.set(-2, 4, 5);
             scene.add(rimLight);
 
@@ -889,10 +891,10 @@
             gridHelper.position.y = -1.05;
             scene.add(gridHelper);
 
-            // Создаём ПК
+            // Создаём ПК с деталями
             createPC();
 
-            // Создаём монитор (отдельно)
+            // Создаём монитор
             createMonitor();
 
             animate3D();
@@ -906,11 +908,467 @@
             });
         }
 
-        function createPC() {
-            pcGroup = new THREE.Group();
-            pcGroup.position.set(0, 0, 0);
+        // ============================================================
+        // СОЗДАНИЕ РЕАЛИСТИЧНЫХ ДЕТАЛЕЙ
+        // ============================================================
 
-            // КОРПУС
+        function createRealisticCPU() {
+            const group = new THREE.Group();
+
+            // Основа
+            const baseGeo = new THREE.BoxGeometry(0.35, 0.04, 0.35);
+            const baseMat = new THREE.MeshPhongMaterial({
+                color: 0x222222,
+                roughness: 0.4,
+                metalness: 0.6
+            });
+            const base = new THREE.Mesh(baseGeo, baseMat);
+            base.position.y = 0;
+            group.add(base);
+
+            // IHS (крышка)
+            const ihsGeo = new THREE.BoxGeometry(0.3, 0.02, 0.3);
+            const ihsMat = new THREE.MeshPhongMaterial({
+                color: 0xcccccc,
+                roughness: 0.2,
+                metalness: 0.8,
+                emissive: 0x888888,
+                emissiveIntensity: 0.1
+            });
+            const ihs = new THREE.Mesh(ihsGeo, ihsMat);
+            ihs.position.y = 0.03;
+            group.add(ihs);
+
+            // Подложка
+            const subGeo = new THREE.BoxGeometry(0.4, 0.015, 0.4);
+            const subMat = new THREE.MeshPhongMaterial({
+                color: 0x00aa44,
+                roughness: 0.6,
+                metalness: 0.2
+            });
+            const sub = new THREE.Mesh(subGeo, subMat);
+            sub.position.y = -0.025;
+            group.add(sub);
+
+            // Контакты
+            for (let i = 0; i < 20; i++) {
+                const pinGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.01, 4);
+                const pinMat = new THREE.MeshPhongMaterial({
+                    color: 0xffaa00,
+                    roughness: 0.3,
+                    metalness: 0.7
+                });
+                const pin = new THREE.Mesh(pinGeo, pinMat);
+                pin.position.set(
+                    -0.15 + (i % 10) * 0.033,
+                    -0.035,
+                    -0.15 + Math.floor(i / 10) * 0.033
+                );
+                group.add(pin);
+            }
+
+            return group;
+        }
+
+        function createRealisticGPU() {
+            const group = new THREE.Group();
+
+            // PCB
+            const pcbGeo = new THREE.BoxGeometry(0.5, 0.08, 0.7);
+            const pcbMat = new THREE.MeshPhongMaterial({
+                color: 0x111111,
+                roughness: 0.6,
+                metalness: 0.3
+            });
+            const pcb = new THREE.Mesh(pcbGeo, pcbMat);
+            pcb.position.y = 0;
+            group.add(pcb);
+
+            // Радиатор
+            for (let i = 0; i < 8; i++) {
+                const finGeo = new THREE.BoxGeometry(0.01, 0.15, 0.6);
+                const finMat = new THREE.MeshPhongMaterial({
+                    color: 0x666666,
+                    roughness: 0.4,
+                    metalness: 0.7
+                });
+                const fin = new THREE.Mesh(finGeo, finMat);
+                fin.position.set(-0.2 + i * 0.057, 0.08, 0);
+                group.add(fin);
+            }
+
+            // Вентиляторы
+            for (let i = 0; i < 2; i++) {
+                const fanGroup = new THREE.Group();
+
+                const fanGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.015, 24);
+                const fanMat = new THREE.MeshPhongMaterial({
+                    color: 0x333333,
+                    roughness: 0.5,
+                    metalness: 0.3
+                });
+                const fan = new THREE.Mesh(fanGeo, fanMat);
+                fan.rotation.x = Math.PI / 2;
+                fanGroup.add(fan);
+
+                // Лопасти
+                for (let j = 0; j < 7; j++) {
+                    const bladeGeo = new THREE.BoxGeometry(0.08, 0.002, 0.01);
+                    const bladeMat = new THREE.MeshPhongMaterial({
+                        color: 0x555555,
+                        roughness: 0.5,
+                        metalness: 0.3
+                    });
+                    const blade = new THREE.Mesh(bladeGeo, bladeMat);
+                    blade.rotation.z = (j / 7) * Math.PI * 2;
+                    blade.position.set(
+                        Math.sin((j / 7) * Math.PI * 2) * 0.07,
+                        0.008,
+                        Math.cos((j / 7) * Math.PI * 2) * 0.07
+                    );
+                    fanGroup.add(blade);
+                }
+
+                fanGroup.position.set(-0.12 + i * 0.24, 0.12, 0);
+                group.add(fanGroup);
+            }
+
+            // Бекплейт
+            const backGeo = new THREE.BoxGeometry(0.45, 0.015, 0.6);
+            const backMat = new THREE.MeshPhongMaterial({
+                color: 0x222222,
+                roughness: 0.5,
+                metalness: 0.6
+            });
+            const back = new THREE.Mesh(backGeo, backMat);
+            back.position.y = -0.05;
+            group.add(back);
+
+            // Разъём питания
+            const powerGeo = new THREE.BoxGeometry(0.08, 0.02, 0.04);
+            const powerMat = new THREE.MeshPhongMaterial({
+                color: 0xff4400,
+                roughness: 0.3,
+                metalness: 0.2,
+                emissive: 0xff4400,
+                emissiveIntensity: 0.2
+            });
+            const power = new THREE.Mesh(powerGeo, powerMat);
+            power.position.set(0.25, 0, 0.35);
+            group.add(power);
+
+            return group;
+        }
+
+        function createRealisticRAM() {
+            const group = new THREE.Group();
+
+            // PCB
+            const pcbGeo = new THREE.BoxGeometry(0.04, 0.12, 0.2);
+            const pcbMat = new THREE.MeshPhongMaterial({
+                color: 0x111111,
+                roughness: 0.6,
+                metalness: 0.3
+            });
+            const pcb = new THREE.Mesh(pcbGeo, pcbMat);
+            pcb.position.y = 0;
+            group.add(pcb);
+
+            // Чипы
+            for (let i = 0; i < 4; i++) {
+                const chipGeo = new THREE.BoxGeometry(0.03, 0.02, 0.02);
+                const chipMat = new THREE.MeshPhongMaterial({
+                    color: 0x333333,
+                    roughness: 0.4,
+                    metalness: 0.5
+                });
+                const chip = new THREE.Mesh(chipGeo, chipMat);
+                chip.position.set(0, 0.02, -0.06 + i * 0.04);
+                group.add(chip);
+            }
+
+            // Радиатор
+            const radGeo = new THREE.BoxGeometry(0.045, 0.14, 0.035);
+            const radMat = new THREE.MeshPhongMaterial({
+                color: 0xcc2222,
+                roughness: 0.3,
+                metalness: 0.6,
+                emissive: 0xcc2222,
+                emissiveIntensity: 0.1
+            });
+            const rad = new THREE.Mesh(radGeo, radMat);
+            rad.position.set(0, 0, 0.11);
+            group.add(rad);
+
+            // Подсветка
+            const ledGeo = new THREE.BoxGeometry(0.03, 0.003, 0.01);
+            const ledMat = new THREE.MeshPhongMaterial({
+                color: 0x00ccff,
+                emissive: 0x00ccff,
+                emissiveIntensity: 0.5
+            });
+            const led = new THREE.Mesh(ledGeo, ledMat);
+            led.position.set(0, 0.08, 0.12);
+            group.add(led);
+
+            return group;
+        }
+
+        function createRealisticMotherboard() {
+            const group = new THREE.Group();
+
+            // PCB
+            const pcbGeo = new THREE.BoxGeometry(1.4, 0.04, 1.2);
+            const pcbMat = new THREE.MeshPhongMaterial({
+                color: 0x00aa44,
+                roughness: 0.6,
+                metalness: 0.2,
+                emissive: 0x00aa44,
+                emissiveIntensity: 0.05
+            });
+            const pcb = new THREE.Mesh(pcbGeo, pcbMat);
+            pcb.position.y = 0;
+            group.add(pcb);
+
+            // Дорожки
+            for (let i = 0; i < 20; i++) {
+                const traceGeo = new THREE.BoxGeometry(0.3, 0.002, 0.005);
+                const traceMat = new THREE.MeshPhongMaterial({
+                    color: 0x88cc88,
+                    roughness: 0.3,
+                    metalness: 0.4
+                });
+                const trace = new THREE.Mesh(traceGeo, traceMat);
+                trace.position.set(
+                    -0.6 + i * 0.065,
+                    0.022,
+                    0.5 + Math.sin(i * 0.5) * 0.3
+                );
+                trace.rotation.z = Math.sin(i * 0.3) * 0.1;
+                group.add(trace);
+            }
+
+            // Сокет процессора
+            const socketGeo = new THREE.BoxGeometry(0.35, 0.015, 0.35);
+            const socketMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                roughness: 0.4,
+                metalness: 0.5
+            });
+            const socket = new THREE.Mesh(socketGeo, socketMat);
+            socket.position.set(0, 0.025, 0);
+            group.add(socket);
+
+            // Слоты RAM
+            for (let i = 0; i < 4; i++) {
+                const slotGeo = new THREE.BoxGeometry(0.04, 0.005, 0.2);
+                const slotMat = new THREE.MeshPhongMaterial({
+                    color: 0x666666,
+                    roughness: 0.5,
+                    metalness: 0.3
+                });
+                const slot = new THREE.Mesh(slotGeo, slotMat);
+                slot.position.set(0.25 + i * 0.09, 0.02, 0.5);
+                group.add(slot);
+            }
+
+            // Слоты PCIe
+            for (let i = 0; i < 3; i++) {
+                const slotGeo = new THREE.BoxGeometry(0.4, 0.005, 0.06);
+                const slotMat = new THREE.MeshPhongMaterial({
+                    color: 0x666666,
+                    roughness: 0.5,
+                    metalness: 0.3
+                });
+                const slot = new THREE.Mesh(slotGeo, slotMat);
+                slot.position.set(-0.3, 0.02, -0.3 - i * 0.2);
+                group.add(slot);
+            }
+
+            // Чипсет
+            const chipGeo = new THREE.BoxGeometry(0.1, 0.015, 0.1);
+            const chipMat = new THREE.MeshPhongMaterial({
+                color: 0x222222,
+                roughness: 0.4,
+                metalness: 0.5
+            });
+            const chip = new THREE.Mesh(chipGeo, chipMat);
+            chip.position.set(0.5, 0.025, -0.4);
+            group.add(chip);
+
+            // Конденсаторы
+            for (let i = 0; i < 12; i++) {
+                const capGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.02, 8);
+                const capMat = new THREE.MeshPhongMaterial({
+                    color: 0x888888,
+                    roughness: 0.3,
+                    metalness: 0.6
+                });
+                const cap = new THREE.Mesh(capGeo, capMat);
+                cap.position.set(
+                    -0.6 + i * 0.055,
+                    0.025,
+                    0.45 + Math.sin(i * 0.7) * 0.05
+                );
+                group.add(cap);
+            }
+
+            return group;
+        }
+
+        function createRealisticCooler() {
+            const group = new THREE.Group();
+
+            // Башня радиатора
+            for (let i = 0; i < 15; i++) {
+                const finGeo = new THREE.BoxGeometry(0.25, 0.01, 0.35);
+                const finMat = new THREE.MeshPhongMaterial({
+                    color: 0x888888,
+                    roughness: 0.4,
+                    metalness: 0.7
+                });
+                const fin = new THREE.Mesh(finGeo, finMat);
+                fin.position.set(0, 0.01 + i * 0.02, 0);
+                group.add(fin);
+            }
+
+            // Тепловые трубки
+            for (let i = 0; i < 4; i++) {
+                const pipeGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8);
+                const pipeMat = new THREE.MeshPhongMaterial({
+                    color: 0xcc8844,
+                    roughness: 0.3,
+                    metalness: 0.8
+                });
+                const pipe = new THREE.Mesh(pipeGeo, pipeMat);
+                pipe.position.set(
+                    -0.08 + i * 0.053,
+                    0.18,
+                    0
+                );
+                pipe.rotation.x = 0.2;
+                group.add(pipe);
+            }
+
+            // Вентилятор
+            const fanGroup = new THREE.Group();
+            const fanGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.015, 24);
+            const fanMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                roughness: 0.5,
+                metalness: 0.3
+            });
+            const fan = new THREE.Mesh(fanGeo, fanMat);
+            fan.rotation.x = Math.PI / 2;
+            fanGroup.add(fan);
+
+            for (let j = 0; j < 7; j++) {
+                const bladeGeo = new THREE.BoxGeometry(0.1, 0.002, 0.01);
+                const bladeMat = new THREE.MeshPhongMaterial({
+                    color: 0x555555,
+                    roughness: 0.5,
+                    metalness: 0.3
+                });
+                const blade = new THREE.Mesh(bladeGeo, bladeMat);
+                blade.rotation.z = (j / 7) * Math.PI * 2;
+                blade.position.set(
+                    Math.sin((j / 7) * Math.PI * 2) * 0.08,
+                    0.008,
+                    Math.cos((j / 7) * Math.PI * 2) * 0.08
+                );
+                fanGroup.add(blade);
+            }
+            fanGroup.position.set(0, 0.18, 0.18);
+            group.add(fanGroup);
+
+            return group;
+        }
+
+        function createRealisticStorage() {
+            const group = new THREE.Group();
+
+            // Корпус
+            const bodyGeo = new THREE.BoxGeometry(0.2, 0.06, 0.35);
+            const bodyMat = new THREE.MeshPhongMaterial({
+                color: 0x222222,
+                roughness: 0.4,
+                metalness: 0.5
+            });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0;
+            group.add(body);
+
+            // Наклейка
+            const labelGeo = new THREE.BoxGeometry(0.15, 0.002, 0.25);
+            const labelMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                roughness: 0.3,
+                metalness: 0.2
+            });
+            const label = new THREE.Mesh(labelGeo, labelMat);
+            label.position.set(0, 0.032, 0);
+            group.add(label);
+
+            // Разъём
+            const connGeo = new THREE.BoxGeometry(0.04, 0.015, 0.05);
+            const connMat = new THREE.MeshPhongMaterial({
+                color: 0x888888,
+                roughness: 0.3,
+                metalness: 0.6
+            });
+            const conn = new THREE.Mesh(connGeo, connMat);
+            conn.position.set(0, -0.005, 0.2);
+            group.add(conn);
+
+            return group;
+        }
+
+        function createRealisticPSU() {
+            const group = new THREE.Group();
+
+            // Корпус
+            const bodyGeo = new THREE.BoxGeometry(0.5, 0.15, 0.3);
+            const bodyMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                roughness: 0.4,
+                metalness: 0.5
+            });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0;
+            group.add(body);
+
+            // Вентилятор
+            const fanGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.015, 24);
+            const fanMat = new THREE.MeshPhongMaterial({
+                color: 0x222222,
+                roughness: 0.5,
+                metalness: 0.3
+            });
+            const fan = new THREE.Mesh(fanGeo, fanMat);
+            fan.rotation.x = Math.PI / 2;
+            fan.position.set(0, 0, 0.16);
+            group.add(fan);
+
+            // Разъёмы
+            for (let i = 0; i < 3; i++) {
+                const plugGeo = new THREE.BoxGeometry(0.02, 0.02, 0.03);
+                const plugMat = new THREE.MeshPhongMaterial({
+                    color: 0x666666,
+                    roughness: 0.3,
+                    metalness: 0.4
+                });
+                const plug = new THREE.Mesh(plugGeo, plugMat);
+                plug.position.set(-0.1 + i * 0.1, -0.02, -0.16);
+                group.add(plug);
+            }
+
+            return group;
+        }
+
+        function createRealisticCase() {
+            const group = new THREE.Group();
+
+            // Корпус
             const caseGeo = new THREE.BoxGeometry(2.0, 2.2, 1.6);
             const caseMat = new THREE.MeshPhongMaterial({
                 color: 0x2a2a2a,
@@ -918,174 +1376,124 @@
                 opacity: 0.12,
                 side: THREE.DoubleSide,
                 roughness: 0.3,
-                metalness: 0.7,
+                metalness: 0.7
             });
             const caseMesh = new THREE.Mesh(caseGeo, caseMat);
             caseMesh.castShadow = true;
             caseMesh.receiveShadow = true;
-            pcGroup.add(caseMesh);
+            group.add(caseMesh);
 
-            // Рамка корпуса
+            // Рамка
             const edgeGeo = new THREE.EdgesGeometry(caseGeo);
             const edgeMat = new THREE.LineBasicMaterial({
                 color: 0x00aaff,
                 transparent: true,
-                opacity: 0.5
+                opacity: 0.4
             });
             const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
-            pcGroup.add(edgeMesh);
+            group.add(edgeMesh);
 
             // Стеклянная панель
             const glassGeo = new THREE.BoxGeometry(1.7, 1.8, 0.05);
             const glassMat = new THREE.MeshPhongMaterial({
                 color: 0x88ccff,
                 transparent: true,
-                opacity: 0.1,
+                opacity: 0.08,
                 roughness: 0.1,
                 metalness: 0.0,
-                side: THREE.DoubleSide,
+                side: THREE.DoubleSide
             });
             const glass = new THREE.Mesh(glassGeo, glassMat);
             glass.position.set(0, 0, 0.83);
             glass.castShadow = true;
-            pcGroup.add(glass);
+            group.add(glass);
 
-            // Нижняя панель
-            const bottomGeo = new THREE.BoxGeometry(1.9, 0.08, 1.5);
-            const bottomMat = new THREE.MeshPhongMaterial({ color: 0x222222, roughness: 0.8, metalness: 0.2 });
-            const bottom = new THREE.Mesh(bottomGeo, bottomMat);
-            bottom.position.set(0, -1.1, 0);
-            bottom.castShadow = true;
-            bottom.receiveShadow = true;
-            pcGroup.add(bottom);
+            return group;
+        }
 
-            // Верхняя панель
-            const topGeo = new THREE.BoxGeometry(1.9, 0.08, 1.5);
-            const topMat = new THREE.MeshPhongMaterial({ color: 0x222222, roughness: 0.8, metalness: 0.2 });
-            const top = new THREE.Mesh(topGeo, topMat);
-            top.position.set(0, 1.1, 0);
-            top.castShadow = true;
-            top.receiveShadow = true;
-            pcGroup.add(top);
+        // ============================================================
+        // СБОРКА ПК
+        // ============================================================
 
-            // МАТЕРИНСКАЯ ПЛАТА (всегда есть)
-            const mbGeo = new THREE.BoxGeometry(1.4, 1.5, 0.06);
-            const mbMat = new THREE.MeshPhongMaterial({
-                color: 0x00aa44,
-                roughness: 0.5,
-                metalness: 0.2,
-                emissive: 0x00aa44,
-                emissiveIntensity: 0.05
-            });
-            const mb = new THREE.Mesh(mbGeo, mbMat);
-            mb.position.set(0, -0.1, 0.6);
-            mb.castShadow = true;
-            mb.receiveShadow = true;
-            pcGroup.add(mb);
+        let pcParts = {};
 
-            // Слоты PCIe
-            for (let i = 0; i < 3; i++) {
-                const slotGeo = new THREE.BoxGeometry(0.4, 0.02, 0.08);
-                const slotMat = new THREE.MeshPhongMaterial({ color: 0x888888, roughness: 0.5, metalness: 0.3 });
-                const slot = new THREE.Mesh(slotGeo, slotMat);
-                slot.position.set(-0.3, -0.3 - i * 0.2, 0.63);
-                pcGroup.add(slot);
-            }
+        function createPC() {
+            pcGroup = new THREE.Group();
+            pcGroup.position.set(0, 0, 0);
 
-            // Слоты RAM (пустые)
-            for (let i = 0; i < 4; i++) {
-                const slotGeo = new THREE.BoxGeometry(0.04, 0.12, 0.18);
-                const slotMat = new THREE.MeshPhongMaterial({ color: 0x666666, roughness: 0.7 });
-                const slot = new THREE.Mesh(slotGeo, slotMat);
-                slot.position.set(0.25 + i * 0.1, 0.3, 0.65);
-                pcGroup.add(slot);
-            }
+            // Корпус (всегда есть)
+            const caseGroup = createRealisticCase();
+            pcGroup.add(caseGroup);
+            pcParts.case = caseGroup;
 
-            // Сокет процессора (пустой)
-            const cpuSocketGeo = new THREE.BoxGeometry(0.35, 0.02, 0.35);
-            const cpuSocketMat = new THREE.MeshPhongMaterial({ color: 0x555555, roughness: 0.5, metalness: 0.4 });
-            const cpuSocket = new THREE.Mesh(cpuSocketGeo, cpuSocketMat);
-            cpuSocket.position.set(0, 0.3, 0.6);
-            pcGroup.add(cpuSocket);
+            // Материнская плата (всегда есть)
+            const mbGroup = createRealisticMotherboard();
+            mbGroup.position.set(0, -0.1, 0.4);
+            pcGroup.add(mbGroup);
+            pcParts.motherboard = mbGroup;
 
-            // Крепление для кулера
-            const mountGeo = new THREE.BoxGeometry(0.3, 0.02, 0.3);
-            const mountMat = new THREE.MeshPhongMaterial({ color: 0x444444, roughness: 0.6 });
-            const mount = new THREE.Mesh(mountGeo, mountMat);
-            mount.position.set(0, 0.32, 0.6);
-            pcGroup.add(mount);
+            // Блок питания (всегда есть)
+            const psuGroup = createRealisticPSU();
+            psuGroup.position.set(0.45, -0.75, -0.3);
+            pcGroup.add(psuGroup);
+            pcParts.psu = psuGroup;
 
-            // БЛОК ПИТАНИЯ (всегда есть)
-            const psuGeo = new THREE.BoxGeometry(0.5, 0.2, 0.35);
-            const psuMat = new THREE.MeshPhongMaterial({
-                color: 0x444444,
-                roughness: 0.5,
-                metalness: 0.6,
-                emissive: 0x444444,
-                emissiveIntensity: 0.05
-            });
-            const psu = new THREE.Mesh(psuGeo, psuMat);
-            psu.position.set(0.45, -0.7, -0.25);
-            psu.castShadow = true;
-            psu.receiveShadow = true;
-            pcGroup.add(psu);
-
-            // Вентилятор БП
-            const psuFanGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.01, 16);
-            const psuFanMat = new THREE.MeshPhongMaterial({ color: 0x222222, roughness: 0.8 });
-            const psuFan = new THREE.Mesh(psuFanGeo, psuFanMat);
-            psuFan.rotation.x = Math.PI / 2;
-            psuFan.position.set(0.45, -0.65, -0.08);
-            pcGroup.add(psuFan);
-
-            // Передние вентиляторы (всегда есть)
-            for (let i = 0; i < 3; i++) {
-                const fanGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.02, 24);
-                const fanMat = new THREE.MeshPhongMaterial({
-                    color: 0x555577,
-                    roughness: 0.3,
-                    metalness: 0.5,
-                    transparent: true,
-                    opacity: 0.4
-                });
-                const fan = new THREE.Mesh(fanGeo, fanMat);
-                fan.rotation.y = Math.PI / 2;
-                fan.position.set(0, -0.1 + i * 0.28, 0.85);
-                fan.castShadow = true;
-                pcGroup.add(fan);
-            }
-
-            // Верхний вентилятор
-            const topFanGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.02, 24);
-            const topFanMat = new THREE.MeshPhongMaterial({
-                color: 0x555577,
-                roughness: 0.3,
-                metalness: 0.5,
-                transparent: true,
-                opacity: 0.4
-            });
-            const topFan = new THREE.Mesh(topFanGeo, topFanMat);
-            topFan.rotation.x = Math.PI / 2;
-            topFan.position.set(0.5, 0.95, 0);
-            topFan.castShadow = true;
-            pcGroup.add(topFan);
+            // Сохраняем места для других компонентов
+            pcParts.cpu = null;
+            pcParts.gpu = null;
+            pcParts.ram = null;
+            pcParts.cooler = null;
+            pcParts.storage = null;
 
             scene.add(pcGroup);
-
-            // Сохраняем ссылки на основные детали для обновления
-            selectedParts.motherboard = mb;
-            selectedParts.psu = psu;
-            selectedParts.case = caseMesh;
-            selectedParts.glass = glass;
         }
+
+        function updatePC() {
+            // Удаляем старые компоненты
+            const toRemove = ['cpu', 'gpu', 'ram', 'cooler', 'storage'];
+            toRemove.forEach(key => {
+                if (pcParts[key]) {
+                    pcGroup.remove(pcParts[key]);
+                    pcParts[key] = null;
+                }
+            });
+
+            // Добавляем компоненты из сборки
+            const componentMap = {
+                cpu: { func: createRealisticCPU, pos: { x: 0, y: 0.32, z: 0.4 } },
+                gpu: { func: createRealisticGPU, pos: { x: -0.3, y: -0.2, z: 0.6 } },
+                ram: { func: createRealisticRAM, pos: { x: 0.25, y: 0.32, z: 0.48 } },
+                cooler: { func: createRealisticCooler, pos: { x: 0, y: 0.5, z: 0.4 } },
+                storage: { func: createRealisticStorage, pos: { x: 0.5, y: -0.4, z: 0.2 } },
+            };
+
+            for (const [category, index] of Object.entries(selectedBuild)) {
+                const config = componentMap[category];
+                if (!config) continue;
+
+                const group = config.func();
+                group.position.set(config.pos.x, config.pos.y, config.pos.z);
+                pcGroup.add(group);
+                pcParts[category] = group;
+            }
+        }
+
+        // ============================================================
+        // МОНИТОР
+        // ============================================================
 
         function createMonitor() {
             monitorGroup = new THREE.Group();
             monitorGroup.position.set(2.5, 0.3, 0.5);
+            monitorGroup.visible = false;
 
             // Подставка
             const standGeo = new THREE.CylinderGeometry(0.1, 0.15, 0.3, 8);
-            const standMat = new THREE.MeshPhongMaterial({ color: 0x333333, roughness: 0.5, metalness: 0.4 });
+            const standMat = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                roughness: 0.5,
+                metalness: 0.4
+            });
             const stand = new THREE.Mesh(standGeo, standMat);
             stand.position.set(0, -0.15, 0);
             stand.castShadow = true;
@@ -1098,195 +1506,33 @@
                 roughness: 0.1,
                 metalness: 0.0,
                 emissive: 0x222244,
-                emissiveIntensity: 0.2
+                emissiveIntensity: 0.3
             });
             const screen = new THREE.Mesh(screenGeo, screenMat);
             screen.position.set(0, 0.3, 0);
             screen.castShadow = true;
             monitorGroup.add(screen);
 
-            // Рамка экрана
+            // Рамка
             const frameGeo = new THREE.EdgesGeometry(screenGeo);
             const frameMat = new THREE.LineBasicMaterial({ color: 0x444466 });
             const frame = new THREE.LineSegments(frameGeo, frameMat);
             frame.position.copy(screen.position);
             monitorGroup.add(frame);
 
-            // Подсветка экрана
-            const glowGeo = new THREE.BoxGeometry(0.3, 0.02, 0.02);
-            const glowMat = new THREE.MeshPhongMaterial({
-                color: 0x4488ff,
-                emissive: 0x4488ff,
-                emissiveIntensity: 0.5,
-                transparent: true,
-                opacity: 0.6
-            });
-            for (let i = -1; i <= 1; i++) {
-                const glow = new THREE.Mesh(glowGeo, glowMat);
-                glow.position.set(i * 0.3, -0.35, 0.04);
-                monitorGroup.add(glow);
-            }
-
-            // Логотип
-            const logoGeo = new THREE.BoxGeometry(0.15, 0.03, 0.01);
-            const logoMat = new THREE.MeshPhongMaterial({
-                color: 0x88bbff,
-                emissive: 0x88bbff,
-                emissiveIntensity: 0.3
-            });
-            const logo = new THREE.Mesh(logoGeo, logoMat);
-            logo.position.set(0.4, -0.3, 0.04);
-            monitorGroup.add(logo);
-
             scene.add(monitorGroup);
         }
 
-        function update3DParts() {
-            if (!pcGroup) return;
-
-            // Удаляем старые детали
-            const toRemove = ['cpu', 'gpu', 'ram', 'cooler', 'storage'];
-            toRemove.forEach(key => {
-                if (selectedParts[key]) {
-                    pcGroup.remove(selectedParts[key]);
-                    delete selectedParts[key];
-                }
-            });
-
-            // Добавляем детали из сборки
-            const partConfigs = {
-                cpu: {
-                    geo: new THREE.BoxGeometry(0.3, 0.05, 0.3),
-                    mat: new THREE.MeshPhongMaterial({
-                        color: 0x00ff00,
-                        emissive: 0x00ff00,
-                        emissiveIntensity: 0.15,
-                        roughness: 0.3,
-                        metalness: 0.5
-                    }),
-                    pos: { x: 0, y: 0.33, z: 0.6 }
-                },
-                gpu: {
-                    geo: new THREE.BoxGeometry(0.45, 0.12, 0.65),
-                    mat: new THREE.MeshPhongMaterial({
-                        color: 0xcc4400,
-                        roughness: 0.3,
-                        metalness: 0.7,
-                        emissive: 0xcc2200,
-                        emissiveIntensity: 0.05
-                    }),
-                    pos: { x: -0.3, y: -0.2, z: 0.7 }
-                },
-                ram: {
-                    geo: new THREE.BoxGeometry(0.04, 0.13, 0.18),
-                    mat: new THREE.MeshPhongMaterial({
-                        color: 0x00ccff,
-                        emissive: 0x00ccff,
-                        emissiveIntensity: 0.2,
-                        roughness: 0.2,
-                        metalness: 0.6
-                    }),
-                    pos: { x: 0.25, y: 0.32, z: 0.65 }
-                },
-                cooler: {
-                    geo: new THREE.CylinderGeometry(0.15, 0.15, 0.25, 8),
-                    mat: new THREE.MeshPhongMaterial({
-                        color: 0x88ccff,
-                        roughness: 0.4,
-                        metalness: 0.5,
-                        emissive: 0x88ccff,
-                        emissiveIntensity: 0.1
-                    }),
-                    pos: { x: 0, y: 0.5, z: 0.6 }
-                },
-                storage: {
-                    geo: new THREE.BoxGeometry(0.3, 0.08, 0.4),
-                    mat: new THREE.MeshPhongMaterial({
-                        color: 0xaa88ff,
-                        roughness: 0.3,
-                        metalness: 0.5,
-                        emissive: 0xaa88ff,
-                        emissiveIntensity: 0.05
-                    }),
-                    pos: { x: 0.5, y: -0.4, z: 0.2 }
-                }
-            };
-
-            // Добавляем выбранные детали
-            for (const [category, index] of Object.entries(selectedBuild)) {
-                const config = partConfigs[category];
-                if (!config) continue;
-
-                const mesh = new THREE.Mesh(config.geo, config.mat);
-                mesh.position.set(config.pos.x, config.pos.y, config.pos.z);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                pcGroup.add(mesh);
-                selectedParts[category] = mesh;
-
-                // Добавляем название для детали
-                const products = PRODUCTS[category] || [];
-                const product = products[index];
-                if (product) {
-                    const canvas2 = document.createElement('canvas');
-                    canvas2.width = 256;
-                    canvas2.height = 64;
-                    const ctx = canvas2.getContext('2d');
-                    ctx.fillStyle = 'rgba(0,0,0,0.8)';
-                    ctx.roundRect(0, 0, 256, 64, 12);
-                    ctx.fill();
-                    ctx.font = 'bold 16px Inter, sans-serif';
-                    ctx.fillStyle = '#ffffff';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    const shortName = product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name;
-                    ctx.fillText(shortName, 128, 34);
-
-                    const spriteMat = new THREE.SpriteMaterial({
-                        map: new THREE.CanvasTexture(canvas2),
-                        transparent: true,
-                        depthTest: false,
-                    });
-                    const sprite = new THREE.Sprite(spriteMat);
-                    sprite.position.set(config.pos.x, config.pos.y + 0.35, config.pos.z);
-                    sprite.scale.set(0.9, 0.22, 1);
-                    pcGroup.add(sprite);
-                }
-            }
-
-            // Обновляем монитор
-            updateMonitor();
-        }
-
         function updateMonitor() {
-            // Показываем монитор только если выбран
             const hasMonitor = selectedBuild['monitor'] !== undefined;
             if (monitorGroup) {
                 monitorGroup.visible = hasMonitor;
-                if (hasMonitor) {
-                    // Изменяем цвет экрана в зависимости от выбранного монитора
-                    const products = PRODUCTS.monitor || [];
-                    const index = selectedBuild['monitor'];
-                    const monitor = products[index];
-                    if (monitor) {
-                        // Меняем подсветку
-                        const glowMat = new THREE.MeshPhongMaterial({
-                            color: 0x4488ff,
-                            emissive: 0x4488ff,
-                            emissiveIntensity: 0.8,
-                            transparent: true,
-                            opacity: 0.8
-                        });
-                        monitorGroup.children.forEach(child => {
-                            if (child.isMesh && child.material && child.material.emissive) {
-                                child.material.emissive.setHex(0x4488ff);
-                                child.material.emissiveIntensity = 0.6;
-                            }
-                        });
-                    }
-                }
             }
         }
+
+        // ============================================================
+        // АНИМАЦИЯ
+        // ============================================================
 
         function animate3D() {
             requestAnimationFrame(animate3D);
@@ -1383,7 +1629,8 @@
             renderProducts();
             updateSummary();
             setTimeout(() => {
-                update3DParts();
+                updatePC();
+                updateMonitor();
             }, 100);
         }
 
@@ -1539,7 +1786,8 @@
                 renderProducts();
                 updateSummary();
                 setTimeout(() => {
-                    update3DParts();
+                    updatePC();
+                    updateMonitor();
                 }, 100);
                 showToast('🗑️ Очищено', 'Сборка очищена');
             }
@@ -1584,9 +1832,12 @@
             updateSummary();
             setTimeout(() => {
                 init3DScene();
-                setTimeout(update3DParts, 300);
+                setTimeout(() => {
+                    updatePC();
+                    updateMonitor();
+                }, 300);
             }, 300);
-            console.log('✅ PC Builder 3D v4.0 загружен!');
+            console.log('✅ PC Builder 3D v5.0 загружен!');
             console.log('📦 Всего категорий: 12');
             const total = Object.values(PRODUCTS).reduce((sum, arr) => sum + arr.length, 0);
             console.log('🛒 Всего товаров: ' + total);
